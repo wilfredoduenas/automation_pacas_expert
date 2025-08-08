@@ -8,7 +8,7 @@ import { IHomePage } from "../interfaces/IHomePage";
  */
 export class HomePage extends BasePage implements IHomePage {
   /**
-   * Elementos del menú de navegación.
+   * Variables del menú de navegación.
    */
   private readonly menuHomeButton: Locator;
   private readonly menuCoursesDropdown: Locator;
@@ -20,7 +20,7 @@ export class HomePage extends BasePage implements IHomePage {
   private readonly menuSignInButton: Locator;
 
   /**
-   * Elementos de la sección de beneficios.
+   * Variables de la sección de beneficios.
    */
   private readonly benefitsCoursesIcon: Locator;
   private readonly benefitsCoursesText: Locator;
@@ -36,14 +36,14 @@ export class HomePage extends BasePage implements IHomePage {
   private readonly benefitsPointsCard: Locator;
 
   /**
-   * Elementos de la sección de cursos.
+   * Variables de la sección de cursos.
    */
   private readonly coursesPresentialButton: Locator;
   private readonly coursesVirtualButton: Locator;
   private readonly coursesExpressButton: Locator;
 
   /**
-   * Elementos de la sección de novedades.
+   * Variables de la sección de novedades.
    */
   private readonly newsPacasmayo1Button: Locator;
   private readonly newsPacasmayo2Button: Locator;
@@ -51,7 +51,7 @@ export class HomePage extends BasePage implements IHomePage {
   private readonly newsViewMoreButton: Locator;
 
   /**
-   * Elementos de la sección de pie de página.
+   * Variables de la sección de pie de página.
    */
   private readonly preFooterFacebookLink: Locator;
   private readonly preFooterInstagramLink: Locator;
@@ -70,7 +70,7 @@ export class HomePage extends BasePage implements IHomePage {
   private readonly preFooterCookiesLink: Locator;
 
   /**
-   * Elementos de la sección de pie de página.
+   * Variables de la sección de pie de página.
    */
   private readonly footerComplaintsLink: Locator;
   private readonly footerDonManuelButton: Locator;
