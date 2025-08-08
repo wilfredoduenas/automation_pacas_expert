@@ -1,8 +1,6 @@
 import { test } from "@playwright/test";
 import { EvidenceHelper } from "../../src/utils/EvidenceHelper";
-import { BasePage } from "../../src/pages/BasePage";
-import { HomePage } from "../../src/pages/HomePage";
-import { LoginPage } from "../../src/pages/LoginPage";
+import { CommonTestSteps } from "../../src/utils/CommonTestSteps";
 
 test.describe.parallel("Elementos de la página de login", () => {
   test.afterEach(async ({ page }, testInfo) => {
@@ -21,13 +19,10 @@ test.describe.parallel("Elementos de la página de login", () => {
   test("Presencia de elementos en la página de login", async ({
     page,
   }, testInfo) => {
-    const homePage = new HomePage(page);
-    const loginPage = new LoginPage(page);
-    await homePage.goto(BasePage.HOME_URL);
-    await homePage.clickMenuSignIn();
+    // Usar el step común para setup
+    const { loginPage } = await CommonTestSteps.setupValidationTest(page);
 
-    await loginPage.verifyWelcomeElements();
-    await loginPage.verifyCredentialsElements();
-    await loginPage.verifyAlternativeAccessElements();
+    // Validar elementos usando el step común
+    await CommonTestSteps.validateLoginPageElements(loginPage);
   });
 });
