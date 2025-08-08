@@ -177,7 +177,7 @@ export class HomePage extends BasePage implements IHomePage {
     () => this.page.getByRole("link", { name: "Instagram" }),
     () => this.page.getByRole("link", { name: "YouTube" }),
     () => this.page.getByRole("link", { name: "TikTok" }),
-    () => this.page.getByRole("img", { name: "construye-experto-log" }),
+    //() => this.page.getByRole("img", { name: "construye-experto-log" }),
     () => this.page.locator("h4").filter({ hasText: "Beneficios" }),
     () => this.page.locator("span").filter({ hasText: "Cursos presenciales" }),
     () => this.page.locator("span").filter({ hasText: "Cursos virtuales" }),
@@ -200,7 +200,7 @@ export class HomePage extends BasePage implements IHomePage {
   private footerLocators = [
     () => this.page.getByRole("img", { name: "web-pacasmayo-logo" }),
     () => this.page.getByText("© 2025 ConstruyeExperto."),
-    () => this.page.getByRole("link", { name: "complaints-book" }),
+    //() => this.page.getByRole("link", { name: "complaints-book" }),
     () => this.page.getByRole("button", { name: "don-manuel" }),
   ];
 
@@ -433,6 +433,9 @@ export class HomePage extends BasePage implements IHomePage {
   }
 
   /**
+   * METHODS FOR CLICKING ON MENU ITEMS
+   */
+  /**
    * Click en el botón de inicio del menú.
    */
   public async clickMenuHome(): Promise<void> {
@@ -489,6 +492,9 @@ export class HomePage extends BasePage implements IHomePage {
   }
 
   /**
+   * METHODS FOR CLICKING ON COURSES MENU ITEMS
+   */
+  /**
    * Click en el menú de cursos presenciales.
    */
   public async clickCoursesPresential(): Promise<void> {
@@ -507,5 +513,252 @@ export class HomePage extends BasePage implements IHomePage {
    */
   public async clickCoursesExpress(): Promise<void> {
     await this.coursesExpressButton.click();
+  }
+
+  /**
+   * BENEFITS SECTION CLICK METHODS
+   */
+
+  /**
+   * Click en el icono de cursos en la sección de beneficios.
+   */
+  public async clickBenefitsCoursesIcon(): Promise<void> {
+    await this.benefitsCoursesIcon.click();
+  }
+
+  /**
+   * Click en el texto de cursos en la sección de beneficios.
+   */
+  public async clickBenefitsCoursesText(): Promise<void> {
+    await this.benefitsCoursesText.click();
+  }
+
+  /**
+   * Click en el icono de calculadora en la sección de beneficios.
+   */
+  public async clickBenefitsCalculatorIcon(): Promise<void> {
+    await this.benefitsCalculatorIcon.click();
+  }
+
+  /**
+   * Click en el texto de calculadora en la sección de beneficios.
+   */
+  public async clickBenefitsCalculatorText(): Promise<void> {
+    await this.benefitsCalculatorText.click();
+  }
+
+  /**
+   * Click en el icono de AYU en la sección de beneficios.
+   */
+  public async clickBenefitsAyuIcon(): Promise<void> {
+    await this.benefitsAyuIcon.click();
+  }
+
+  /**
+   * Click en el texto de AYU en la sección de beneficios.
+   */
+  public async clickBenefitsAyuText(): Promise<void> {
+    await this.benefitsAyuText.click();
+  }
+
+  /**
+   * Click en el icono de puntos en la sección de beneficios.
+   */
+  public async clickBenefitsPointsIcon(): Promise<void> {
+    await this.benefitsPointsIcon.click();
+  }
+
+  /**
+   * Click en el texto de puntos en la sección de beneficios.
+   */
+  public async clickBenefitsPointsText(): Promise<void> {
+    await this.benefitsPointsText.click();
+  }
+
+  /**
+   * Click en la tarjeta de cursos en la sección de beneficios.
+   */
+  public async clickBenefitsCoursesCard(): Promise<void> {
+    await this.benefitsCoursesCard.click();
+  }
+
+  /**
+   * Click en la tarjeta de calculadora en la sección de beneficios.
+   */
+  public async clickBenefitsCalculatorCard(): Promise<void> {
+    await this.benefitsCalculatorCard.click();
+  }
+
+  /**
+   * Click en la tarjeta de AYU en la sección de beneficios.
+   */
+  public async clickBenefitsAyuCard(): Promise<void> {
+    await this.benefitsAyuCard.click();
+  }
+
+  /**
+   * Click en la tarjeta de puntos en la sección de beneficios.
+   */
+  public async clickBenefitsPointsCard(): Promise<void> {
+    await this.benefitsPointsCard.click();
+  }
+
+  /**
+   * NEWS SECTION CLICK METHODS
+   */
+
+  /**
+   * Click en la primera noticia de Pacasmayo.
+   */
+  public async clickNewsPacasmayo1(): Promise<void> {
+    await this.newsPacasmayo1Button.click();
+  }
+
+  /**
+   * Click en la segunda noticia de Pacasmayo.
+   */
+  public async clickNewsPacasmayo2(): Promise<void> {
+    await this.newsPacasmayo2Button.click();
+  }
+
+  /**
+   * Click en la noticia de Cultivalu.
+   */
+  public async clickNewsCultivalu(): Promise<void> {
+    await this.newsCultivaluButton.click();
+  }
+
+  /**
+   * Click en el botón "Ver más novedades".
+   */
+  public async clickNewsViewMore(): Promise<void> {
+    await this.newsViewMoreButton.click();
+  }
+
+  /**
+   * PRE-FOOTER SECTION CLICK METHODS
+   */
+
+  /**
+   * Click en el enlace de Facebook en el pre-footer.
+   */
+  public async clickPreFooterFacebook(): Promise<void> {
+    await this.preFooterFacebookLink.click();
+  }
+
+  /**
+   * Click en el enlace de Instagram en el pre-footer.
+   */
+  public async clickPreFooterInstagram(): Promise<void> {
+    await this.preFooterInstagramLink.click();
+  }
+
+  /**
+   * Click en el enlace de YouTube en el pre-footer.
+   */
+  public async clickPreFooterYouTube(): Promise<void> {
+    await this.preFooterYouTubeLink.click();
+  }
+
+  /**
+   * Click en el enlace de TikTok en el pre-footer.
+   */
+  public async clickPreFooterTikTok(): Promise<void> {
+    await this.preFooterTikTokLink.click();
+  }
+
+  /**
+   * Click en el span de cursos presenciales en el pre-footer.
+   */
+  public async clickPreFooterPresentialCourses(): Promise<void> {
+    await this.preFooterPresentialCoursesSpan.click();
+  }
+
+  /**
+   * Click en el span de cursos virtuales en el pre-footer.
+   */
+  public async clickPreFooterVirtualCourses(): Promise<void> {
+    await this.preFooterVirtualCoursesSpan.click();
+  }
+
+  /**
+   * Click en el span de aprendizaje express en el pre-footer.
+   */
+  public async clickPreFooterExpressLearning(): Promise<void> {
+    await this.preFooterExpressLearningSpan.click();
+  }
+
+  /**
+   * Click en el texto de calculadora en el pre-footer.
+   */
+  public async clickPreFooterCalculator(): Promise<void> {
+    await this.preFooterCalculatorText.click();
+  }
+
+  /**
+   * Click en el texto de AYU en el pre-footer.
+   */
+  public async clickPreFooterAyu(): Promise<void> {
+    await this.preFooterAyuText.click();
+  }
+
+  /**
+   * Click en el texto de noticias en el pre-footer.
+   */
+  public async clickPreFooterNews(): Promise<void> {
+    await this.preFooterNewsText.click();
+  }
+
+  /**
+   * Click en el texto de puntos en el pre-footer.
+   */
+  public async clickPreFooterPoints(): Promise<void> {
+    await this.preFooterPointsText.click();
+  }
+
+  /**
+   * Click en el enlace de términos y condiciones en el pre-footer.
+   */
+  public async clickPreFooterTerms(): Promise<void> {
+    await this.preFooterTermsLink.click();
+  }
+
+  /**
+   * Click en el enlace de tratamiento de datos en el pre-footer.
+   */
+  public async clickPreFooterTreatment(): Promise<void> {
+    await this.preFooterTreatmentLink.click();
+  }
+
+  /**
+   * Click en el enlace de condiciones de promociones en el pre-footer.
+   */
+  public async clickPreFooterPromotions(): Promise<void> {
+    await this.preFooterPromotionsLink.click();
+  }
+
+  /**
+   * Click en el enlace de cookies en el pre-footer.
+   */
+  public async clickPreFooterCookies(): Promise<void> {
+    await this.preFooterCookiesLink.click();
+  }
+
+  /**
+   * FOOTER SECTION CLICK METHODS
+   */
+
+  /**
+   * Click en el enlace del libro de reclamaciones en el footer.
+   */
+  public async clickFooterComplaints(): Promise<void> {
+    await this.footerComplaintsLink.click();
+  }
+
+  /**
+   * Click en el botón de Don Manuel en el footer.
+   */
+  public async clickFooterDonManuel(): Promise<void> {
+    await this.footerDonManuelButton.click();
   }
 }
