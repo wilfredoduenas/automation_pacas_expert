@@ -266,19 +266,36 @@ export class CodeAnalysisExtractor {
    * Genera descripción para expectations
    */
   private generateExpectationDescription(methodName: string, parameters: string[]): string {
-    // Mapeos específicos para diferentes expectations
+    // Mapeos específicos para validaciones de campo de celular
     if (methodName.includes('expectCredentialsPhoneErrorMessageToHaveText')) {
       return `se muestra el mensaje de error: "${parameters[0] || 'mensaje de error'}"`;
     }
     
+    if (methodName.includes('expectCredentialsPhoneErrorMessageVisible')) {
+      return 'se muestra un mensaje de error en el campo número de celular';
+    }
+    
+    if (methodName.includes('expectCredentialsPhoneMinLengthMessageVisible')) {
+      return 'se muestra el mensaje de longitud mínima';
+    }
+    
+    if (methodName.includes('expectCredentialsPhoneMinLengthMessageToHaveText')) {
+      return `se muestra el mensaje: "${parameters[0] || 'mensaje de longitud'}"`;
+    }
+    
     if (methodName.includes('expectCredentialsPhoneRequiredMessageVisible')) {
-      return 'el mensaje de campo requerido debe estar visible';
+      return 'se muestra el mensaje de campo requerido';
     }
     
     if (methodName.includes('expectCredentialsPhoneRequiredMessageToHaveText')) {
-      return `se muestra el mensaje de error: "${parameters[0] || 'mensaje requerido'}"`;
+      return `se muestra el mensaje: "${parameters[0] || 'campo requerido'}"`;
     }
     
+    if (methodName.includes('expectCredentialsPhoneFocused')) {
+      return 'el campo número de celular debe tener el foco';
+    }
+    
+    // Mapeos para botones de login
     if (methodName.includes('expectCredentialsSignInButtonDisabled')) {
       return 'el botón de iniciar sesión debe estar deshabilitado';
     }
@@ -287,32 +304,121 @@ export class CodeAnalysisExtractor {
       return 'el botón de iniciar sesión debe estar habilitado';
     }
     
+    // Mapeos para botones de acceso alternativo
+    if (methodName.includes('expectAlternativeAccessRegisterButtonEnabled')) {
+      return 'el botón de registrarse debe estar habilitado';
+    }
+    
+    if (methodName.includes('expectAlternativeAccessGuestButtonEnabled')) {
+      return 'el botón de ingresar como invitado debe estar habilitado';
+    }
+    
+    // Mapeos para popup de cambio de teléfono
+    if (methodName.includes('expectChangePhonePopupHeadingVisible')) {
+      return 'se muestra el encabezado del popup de ayuda';
+    }
+    
+    if (methodName.includes('expectChangePhonePopupMessageVisible')) {
+      return 'se muestra el mensaje del popup de ayuda';
+    }
+    
+    if (methodName.includes('expectChangePhonePopupButtonVisible')) {
+      return 'se muestra el botón del popup de ayuda';
+    }
+    
+    if (methodName.includes('expectChangePhonePopupHeadingToHaveText')) {
+      return `el popup muestra el título: "${parameters[0] || 'título del popup'}"`;
+    }
+    
+    // Mapeos para calendario
+    if (methodName.includes('expectCalendarVisible')) {
+      return 'el calendario debe estar visible';
+    }
+    
+    if (methodName.includes('expectCalendarHidden')) {
+      return 'el calendario debe estar oculto';
+    }
+    
+    if (methodName.includes('expectDateSelected')) {
+      return 'la fecha debe estar seleccionada correctamente';
+    }
+    
+    // Mapeos para validaciones de fecha
+    if (methodName.includes('validateEnabledDays')) {
+      return 'se validan los días habilitados para mayor de edad';
+    }
+    
+    if (methodName.includes('validateMonthRestrictions')) {
+      return 'se validan las restricciones de navegación entre meses';
+    }
+    
+    if (methodName.includes('validateValidDateSelection')) {
+      return 'se valida que la fecha seleccionada cumple con mayoría de edad';
+    }
+    
+    if (methodName.includes('validateInvalidDateRestriction')) {
+      return 'se valida que no se puede seleccionar fecha de menor de edad';
+    }
+    
+    // Mapeos genéricos para estados comunes
     if (methodName.includes('expectVisible')) {
       return 'el elemento debe estar visible';
     }
     
-    if (methodName.includes('expectToHaveText')) {
-      return `debe mostrar el texto "${parameters[0] || 'texto'}"`;
+    if (methodName.includes('expectHidden')) {
+      return 'el elemento debe estar oculto';
     }
     
     if (methodName.includes('expectDisabled')) {
-      return 'debe estar deshabilitado';
+      return 'el elemento debe estar deshabilitado';
     }
     
     if (methodName.includes('expectEnabled')) {
-      return 'debe estar habilitado';
+      return 'el elemento debe estar habilitado';
     }
     
     if (methodName.includes('expectFocused')) {
-      return 'debe tener el foco';
+      return 'el elemento debe tener el foco';
     }
     
-    if (methodName.includes('expect') && parameters.length > 0) {
-      return `debe cumplir ${methodName} con "${parameters[0]}"`;
+    if (methodName.includes('expectToHaveText')) {
+      return `debe mostrar el texto: "${parameters[0] || 'texto esperado'}"`;
     }
     
-    // Descripción genérica para cualquier expectation
-    return `debe cumplir ${methodName}`;
+    if (methodName.includes('toHaveText')) {
+      return `debe mostrar el texto: "${parameters[0] || 'texto esperado'}"`;
+    }
+    
+    // Mapeos para expectativas generales de Playwright
+    if (methodName.includes('toBe')) {
+      if (parameters[0]) {
+        return `el valor debe ser: "${parameters[0]}"`;
+      }
+      return 'se debe verificar el resultado esperado';
+    }
+    
+    if (methodName.includes('toBeDefined')) {
+      return 'el elemento debe estar definido';
+    }
+    
+    if (methodName.includes('resolves.toBe')) {
+      return 'la promesa debe resolverse con el valor esperado';
+    }
+    
+    // Omitir expectativas muy técnicas
+    if (methodName.includes('expect(') && 
+        (methodName.includes('generator') || 
+         methodName.includes('extractor') ||
+         methodName.includes('formatter'))) {
+      return ''; // Será filtrado después
+    }
+    
+    // Descripción genérica para cualquier expectation no mapeada
+    if (methodName.includes('expect')) {
+      return 'se verifica el resultado esperado';
+    }
+    
+    return 'el resultado debe ser correcto';
   }
   
   /**
@@ -353,10 +459,23 @@ export class CodeAnalysisExtractor {
       thenSteps.push(expectation.description);
     });
     
-    // Si no hay expectations, generar basándose en el contexto del test
+    // Generar expectativa contextual basada en el título del test
+    const contextualExpectation = this.generateContextualExpectation(testCase.title, testCase.actions);
+    
+    // Si no hay expectations, usar la contextual como única expectativa
     if (thenSteps.length === 0) {
-      const contextualExpectation = this.generateContextualExpectation(testCase.title, testCase.actions);
       thenSteps.push(contextualExpectation);
+    } else {
+      // Si hay expectations y la contextual es más específica que el comportamiento genérico, reemplazar o agregar
+      const hasGenericExpectation = thenSteps.some(step => 
+        step.includes('se debe verificar el resultado esperado') || 
+        step.includes('el comportamiento del sistema debe ser el correcto')
+      );
+      
+      if (hasGenericExpectation && !contextualExpectation.includes('el comportamiento del sistema debe ser el correcto')) {
+        // Agregar la expectativa contextual como el paso principal
+        thenSteps.unshift(contextualExpectation);
+      }
     }
     
     // Crear el escenario con todos los parámetros requeridos
@@ -421,6 +540,19 @@ export class CodeAnalysisExtractor {
    */
   private generateContextualExpectation(testTitle: string, actions: CodeAction[]): string {
     const title = testTitle.toLowerCase();
+    
+    // Casos específicos identificados
+    if (title.includes('demostrar generación de documentación')) {
+      return 'el generador de documentación debe estar configurado correctamente';
+    }
+    
+    if (title.includes('letras en el campo de número') && title.includes('ignoren')) {
+      return 'las letras deben ser ignoradas y el campo debe permanecer vacío';
+    }
+    
+    if (title.includes('número de celular que contenga letras') && title.includes('ignoradas')) {
+      return 'las letras deben ser ignoradas y solo deben mantenerse los números';
+    }
     
     // Expectativas para tests de foco
     if (title.includes('foco')) {

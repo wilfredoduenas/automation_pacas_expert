@@ -1,7 +1,7 @@
 # 📋 Documentación de Tests - automation_pacas_expert
 
 **Versión:** 1.0.0  
-**Generado:** 10 de agosto de 2025, 11:42
+**Generado:** 10 de agosto de 2025, 11:52
 
 ---
 
@@ -73,12 +73,13 @@ Feature: Funcionalidad de C:\Users\reyss\Videos\playwritgh\automation_pacas_expe
     And el usuario ejecuta formatter.getFileExtension
     And el usuario ejecuta console.log con "✅ Test Documentation Generator está listo para usar"
     And el usuario ejecuta console.log con "💡 Ejecuta: npm run generate-docs para generar documentación"
-    Then debe cumplir toBeDefined
-    And debe cumplir expect con "generator"
-    And debe cumplir toBe
-    And debe cumplir expect con "extractor.canProcess('test.spec.ts')"
-    And debe cumplir toBe
-    And debe cumplir expect con "formatter.getFileExtension()"
+    Then el generador de documentación debe estar configurado correctamente
+    And se debe verificar el resultado esperado
+    And se verifica el resultado esperado
+    And el valor debe ser: "true"
+    And se verifica el resultado esperado
+    And el valor debe ser: ".md"
+    And se verifica el resultado esperado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -139,7 +140,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que el campo número de celular tenga el foco al abrir la página
     Given el usuario se encuentra en la página de login
     When el usuario ejecuta la acción correspondiente
-    Then debe cumplir loginPage.expectCredentialsPhoneFocused
+    Then el campo número de celular debe tener el foco
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -178,7 +179,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que el botón de registrarse en la sección de acceso alternativo esté habilitado
     Given el usuario se encuentra en la página de login
     When el usuario ejecuta la acción correspondiente
-    Then debe cumplir loginPage.expectAlternativeAccessRegisterButtonEnabled
+    Then el botón de registrarse debe estar habilitado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -191,7 +192,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que el botón de ingresar como invitado esté habilitado
     Given el usuario se encuentra en la página de login
     When el usuario ejecuta la acción correspondiente
-    Then debe cumplir loginPage.expectAlternativeAccessGuestButtonEnabled
+    Then el botón de ingresar como invitado debe estar habilitado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -204,7 +205,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que al ingresar un número de celular que inicie con un dígito distinto de 9, el botón de iniciar sesión esté deshabilitado y se muestre un mensaje de error
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "123456789" en el campo número de celular
-    Then debe cumplir loginPage.expectCredentialsPhoneErrorMessageVisible
+    Then se muestra un mensaje de error en el campo número de celular
     And se muestra el mensaje de error: "Número de celular debe iniciar en 9"
     And el botón de iniciar sesión debe estar deshabilitado
 ```
@@ -219,8 +220,8 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que al ingresar un número de celular que no cumple con la longitud mínima, se muestre un mensaje de error
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "9878" en el campo número de celular
-    Then debe cumplir loginPage.expectCredentialsPhoneMinLengthMessageVisible
-    And debe cumplir loginPage.expectCredentialsPhoneMinLengthMessageToHaveText con "Debe tener al menos 9 caracteres"
+    Then se muestra el mensaje de longitud mínima
+    And se muestra el mensaje: "Debe tener al menos 9 caracteres"
     And el botón de iniciar sesión debe estar deshabilitado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -235,8 +236,9 @@ Feature: Funcionalidad de Login
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "abc" en el campo número de celular
     And el usuario ejecuta loginPage.getCredentialsPhoneValue
-    Then debe cumplir resolves.toBe
-    And debe cumplir expect con "loginPage.getCredentialsPhoneValue()"
+    Then las letras deben ser ignoradas y el campo debe permanecer vacío
+    And se debe verificar el resultado esperado
+    And se verifica el resultado esperado
     And el botón de iniciar sesión debe estar deshabilitado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -251,8 +253,8 @@ Feature: Funcionalidad de Login
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "9876abc" en el campo número de celular
     And el usuario ejecuta loginPage.getCredentialsPhoneValue
-    Then debe cumplir resolves.toBe
-    And debe cumplir expect con "loginPage.getCredentialsPhoneValue()"
+    Then el valor debe ser: "9876"
+    And se verifica el resultado esperado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -266,8 +268,8 @@ Feature: Funcionalidad de Login
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "9876!@#$" en el campo número de celular
     And el usuario ejecuta loginPage.getCredentialsPhoneValue
-    Then debe cumplir resolves.toBe
-    And debe cumplir expect con "loginPage.getCredentialsPhoneValue()"
+    Then el valor debe ser: "9876"
+    And se verifica el resultado esperado
     And el botón de iniciar sesión debe estar deshabilitado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -283,8 +285,8 @@ Feature: Funcionalidad de Login
     When el usuario ingresa "1234" en el campo número de celular
     And el usuario borra la entrada del campo número de celular
     Then se muestra el mensaje de error: "Número de celular debe iniciar en 9"
-    And el mensaje de campo requerido debe estar visible
-    And se muestra el mensaje de error: "Número de celular es requerido"
+    And se muestra el mensaje de campo requerido
+    And se muestra el mensaje: "Número de celular es requerido"
     And el botón de iniciar sesión debe estar deshabilitado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -298,10 +300,10 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que al hacer clic en el link cambiaste el número de celular, se muestre el popup: Te ayudaremos
     Given el usuario se encuentra en la página de login
     When el usuario hace clic en el elemento
-    Then debe cumplir loginPage.expectChangePhonePopupHeadingVisible
-    And debe cumplir loginPage.expectChangePhonePopupMessageVisible
-    And debe cumplir loginPage.expectChangePhonePopupButtonVisible
-    And debe cumplir loginPage.expectChangePhonePopupHeadingToHaveText con "¡Te ayudaremos a resolverlo!"
+    Then se muestra el encabezado del popup de ayuda
+    And se muestra el mensaje del popup de ayuda
+    And se muestra el botón del popup de ayuda
+    And el popup muestra el título: "¡Te ayudaremos a resolverlo!"
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -314,8 +316,8 @@ Feature: Funcionalidad de Registro
   Scenario: Verificar que el calendario muestre por defecto el año y mes correcto para mayoría de edad
     Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
     When el usuario ejecuta registerPage.openDatePicker
-    Then debe cumplir registerPage.expectCalendarVisible
-    And debe cumplir DateHelper.validateEnabledDays
+    Then el calendario debe estar visible
+    And se validan los días habilitados para mayor de edad
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -330,7 +332,7 @@ Feature: Funcionalidad de Registro
     When el usuario ejecuta registerPage.openDatePicker
     And el usuario hace clic en el elemento
     And el usuario ejecuta DateHelper.validateMonthRestrictions con "registerPage"
-    Then debe cumplir registerPage.expectCalendarVisible
+    Then el calendario debe estar visible
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -371,8 +373,8 @@ Feature: Funcionalidad de Registro
   Scenario: Verificar que se puede navegar entre meses usando las flechas del calendario
     Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
     When el usuario ejecuta registerPage.openDatePicker
-    Then debe cumplir registerPage.expectCalendarVisible
-    And debe cumplir registerPage.expectCalendarVisible
+    Then el calendario debe estar visible
+    And el calendario debe estar visible
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -386,8 +388,8 @@ Feature: Funcionalidad de Registro
     Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
     When el usuario ejecuta registerPage.openDatePicker
     And el usuario ejecuta registerPage.closeDatePicker
-    Then debe cumplir registerPage.expectCalendarVisible
-    And debe cumplir registerPage.expectCalendarHidden
+    Then el calendario debe estar visible
+    And el calendario debe estar oculto
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
