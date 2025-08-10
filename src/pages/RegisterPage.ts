@@ -1,12 +1,13 @@
 import { Locator, Page, expect, test } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { IRegisterPage } from "../interfaces/IRegisterPage";
+import { ICompleteRegisterPage } from "../interfaces/IRegisterPage";
+import { CalendarHelper } from "../utils/CalendarHelper";
 
 /**
  * Page Object Model para la página de registro, centraliza locators y lógica de verificación.
  * Permite fácil extensión y mantenimiento.
  */
-export class RegisterPage extends BasePage implements IRegisterPage {
+export class RegisterPage extends BasePage implements ICompleteRegisterPage {
   /**
    * Variables de la sección de progreso.
    */
@@ -28,6 +29,24 @@ export class RegisterPage extends BasePage implements IRegisterPage {
   private readonly birthDateLabel: Locator;
   private readonly birthDateButton: Locator;
   private readonly backgroundContainer: Locator;
+
+  /**
+   * Variables del calendario de fecha de nacimiento.
+   */
+  private readonly datepickerContainer: Locator;
+  private readonly datepickerInput: Locator;
+  private readonly datepickerCalendarIcon: Locator;
+  private readonly datepickerCloseIcon: Locator;
+  private readonly calendarDropdown: Locator;
+  private readonly calendarContainer: Locator;
+  private readonly calendarHeader: Locator;
+  private readonly calendarCurrentDate: Locator;
+  private readonly calendarArrowUp: Locator;
+  private readonly calendarArrowLeft: Locator;
+  private readonly calendarArrowRight: Locator;
+  private readonly calendarDaysContainer: Locator;
+  private readonly calendarWeeks: Locator;
+  private readonly calendarDays: Locator;
 
   /**
    * Variables de la sección de tipo de documento.
@@ -129,6 +148,24 @@ export class RegisterPage extends BasePage implements IRegisterPage {
       name: "dd/mm/aaaa calendar_today",
     });
     this.backgroundContainer = this.page.locator(".container-register__img__bg");
+
+    /**
+     * Elementos del calendario de fecha de nacimiento.
+     */
+    this.datepickerContainer = this.page.locator(".bds-datepicker");
+    this.datepickerInput = this.page.locator(".bds-input-wrapper.construyex.md.bds-deletable");
+    this.datepickerCalendarIcon = this.page.locator(".material-icons-round.bds-calendar");
+    this.datepickerCloseIcon = this.page.locator(".bds-close .material-icons-round");
+    this.calendarDropdown = this.page.locator(".construyex.bds-dropdown-calendar");
+    this.calendarContainer = this.page.locator("bds-calendar.construyex.bds-calendar-container");
+    this.calendarHeader = this.page.locator(".bds-header");
+    this.calendarCurrentDate = this.page.locator(".bds-current-date p");
+    this.calendarArrowUp = this.page.locator(".bds-current-date i");
+    this.calendarArrowLeft = this.page.locator(".bds-arrows i").first();
+    this.calendarArrowRight = this.page.locator(".bds-arrows i").last();
+    this.calendarDaysContainer = this.page.locator(".bds-calendar-days");
+    this.calendarWeeks = this.page.locator(".bds-weeks");
+    this.calendarDays = this.page.locator(".bds-days");
 
     /**
      * Elementos de la sección de tipo de documento.
@@ -251,11 +288,146 @@ export class RegisterPage extends BasePage implements IRegisterPage {
   }
 
   /**
-   * Hace clic en el botón de fecha de nacimiento.
+   * Llena ambos apellidos (paterno y materno) - método de conveniencia.
+   * @param lastName El apellido completo a escribir (se usará para ambos campos).
+   * @return {Promise<void>} Promesa que se resuelve cuando se llenan los campos.
+   */
+  public async fillLastName(lastName: string): Promise<void> {
+    await this.fillPaternalLastName(lastName);
+    await this.fillMaternalLastName(lastName);
+  }
+
+  /**
+   * Hace clic en el botón de fecha de nacimiento para abrir el calendario.
    * @return {Promise<void>} Promesa que se resuelve cuando se hace clic en el botón.
    */
   public async clickBirthDateButton(): Promise<void> {
     await this.birthDateButton.click();
+  }
+
+  /**
+   * Abre el calendario de fecha de nacimiento.
+   * @return {Promise<void>} Promesa que se resuelve cuando se abre el calendario.
+   */
+  public async openDatePicker(): Promise<void> {
+    await this.datepickerCalendarIcon.click();
+    // Esperar a que el calendario sea visible
+    await expect(this.calendarDropdown).toBeVisible({ timeout: 5000 });
+  }
+
+  /**
+   * Cierra el calendario de fecha de nacimiento usando múltiples estrategias.
+   * @return {Promise<void>} Promesa que se resuelve cuando se cierra el calendario.
+   */
+  public async closeDatePicker(): Promise<void> {
+    // Verificar si el calendario está abierto antes de intentar cerrarlo
+    const isCalendarVisible = await this.calendarDropdown.isVisible();
+    if (!isCalendarVisible) {
+      console.log("El calendario ya está cerrado");
+      return;
+    }
+
+    // Estrategia 1: Intentar usar el icono de cerrar si está visible
+    try {
+      const closeIcon = this.datepickerCloseIcon;
+      if (await closeIcon.isVisible({ timeout: 1000 })) {
+        await closeIcon.click();
+        await expect(this.calendarDropdown).toBeHidden({ timeout: 3000 });
+        return;
+      }
+    } catch (error) {
+      console.log("Estrategia 1 (icono cerrar) falló, probando estrategia 2");
+    }
+
+    // Estrategia 2: Hacer clic en el icono del calendario para cerrarlo
+    try {
+      await this.datepickerCalendarIcon.click();
+      await expect(this.calendarDropdown).toBeHidden({ timeout: 3000 });
+      return;
+    } catch (error) {
+      console.log("Estrategia 2 (icono calendario) falló, probando estrategia 3");
+    }
+
+    // Estrategia 3: Hacer clic en el input de fecha para cerrarlo
+    try {
+      await this.datepickerInput.click();
+      await expect(this.calendarDropdown).toBeHidden({ timeout: 3000 });
+      return;
+    } catch (error) {
+      console.log("Estrategia 3 (input fecha) falló, probando estrategia 4");
+    }
+
+    // Estrategia 4: Hacer clic fuera del calendario (en el fondo)
+    try {
+      await this.backgroundContainer.click();
+      await expect(this.calendarDropdown).toBeHidden({ timeout: 3000 });
+      return;
+    } catch (error) {
+      console.log("Estrategia 4 (clic fuera) falló, probando estrategia 5");
+    }
+
+    // Estrategia 5: Presionar la tecla Escape
+    try {
+      await this.page.keyboard.press('Escape');
+      await expect(this.calendarDropdown).toBeHidden({ timeout: 3000 });
+      return;
+    } catch (error) {
+      console.log("Estrategia 5 (Escape) falló");
+    }
+
+    // Si todas las estrategias fallan, lanzar error
+    throw new Error("No se pudo cerrar el calendario con ninguna de las estrategias disponibles");
+  }
+
+  /**
+   * Navega al mes anterior en el calendario.
+   * @return {Promise<void>} Promesa que se resuelve cuando se navega al mes anterior.
+   */
+  public async navigateToPreviousMonth(): Promise<void> {
+    await this.calendarArrowLeft.click();
+  }
+
+  /**
+   * Navega al mes siguiente en el calendario.
+   * @return {Promise<void>} Promesa que se resuelve cuando se navega al mes siguiente.
+   */
+  public async navigateToNextMonth(): Promise<void> {
+    await this.calendarArrowRight.click();
+  }
+
+  /**
+   * Hace clic en la fecha actual para cambiar de vista (mes/año).
+   * @return {Promise<void>} Promesa que se resuelve cuando se hace clic en la fecha actual.
+   */
+  public async clickCurrentDateHeader(): Promise<void> {
+    await this.calendarArrowUp.click();
+  }
+
+  /**
+   * Selecciona un día específico del calendario.
+   * @param day El día a seleccionar (1-31).
+   * @return {Promise<void>} Promesa que se resuelve cuando se selecciona el día.
+   */
+  public async selectDay(day: number): Promise<void> {
+    await CalendarHelper.selectDay(this.calendarDays, day);
+  }
+
+  /**
+   * Selecciona una fecha completa navegando por mes y año si es necesario.
+   * @param targetDate Fecha objetivo en formato "DD/MM/AAAA".
+   * @return {Promise<void>} Promesa que se resuelve cuando se selecciona la fecha.
+   */
+  public async selectDate(targetDate: string): Promise<void> {
+    await CalendarHelper.selectDate(
+      this.page,
+      this.calendarDropdown,
+      this.calendarCurrentDate,
+      this.calendarDays,
+      () => this.openDatePicker(),
+      () => this.navigateToPreviousMonth(),
+      () => this.navigateToNextMonth(),
+      targetDate
+    );
   }
 
   /**
@@ -418,5 +590,95 @@ export class RegisterPage extends BasePage implements IRegisterPage {
    */
   public async expectDocumentNumberValue(expectedValue: string): Promise<void> {
     await expect(this.documentNumberInput).toHaveValue(expectedValue);
+  }
+
+  /**
+   * Métodos para verificar estados del datepicker.
+   */
+
+  /**
+   * Verifica que el calendario esté visible.
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica la visibilidad.
+   */
+  public async expectCalendarVisible(): Promise<void> {
+    await CalendarHelper.expectCalendarVisible(this.calendarDropdown);
+  }
+
+  /**
+   * Verifica que el calendario esté oculto.
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica que está oculto.
+   */
+  public async expectCalendarHidden(): Promise<void> {
+    await CalendarHelper.expectCalendarHidden(this.calendarDropdown);
+  }
+
+  /**
+   * Verifica que la fecha mostrada en el input sea la esperada.
+   * @param expectedDate Fecha esperada en formato DD/MM/AAAA.
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica la fecha.
+   */
+  public async expectSelectedDate(expectedDate: string): Promise<void> {
+    await CalendarHelper.expectSelectedDate(this.datepickerInput, expectedDate);
+  }
+
+  /**
+   * Verifica que el mes y año mostrados en el calendario sean los esperados.
+   * @param expectedMonthYear Mes y año esperados (ej: "Agosto 2007").
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica el mes/año.
+   */
+  public async expectCalendarMonthYear(expectedMonthYear: string): Promise<void> {
+    await CalendarHelper.expectCalendarMonthYear(this.calendarCurrentDate, expectedMonthYear);
+  }
+
+  /**
+   * Verifica que un día específico esté habilitado en el calendario.
+   * @param day Día a verificar (1-31).
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica que el día está habilitado.
+   */
+  public async expectDayEnabled(day: number): Promise<void> {
+    await CalendarHelper.expectDayEnabled(this.calendarDays, day);
+  }
+
+  /**
+   * Verifica que un día específico esté deshabilitado en el calendario.
+   * @param day Día a verificar (1-31).
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica que el día está deshabilitado.
+   */
+  public async expectDayDisabled(day: number): Promise<void> {
+    await CalendarHelper.expectDayDisabled(this.calendarDays, day);
+  }
+
+  /**
+   * Obtiene la fecha actualmente seleccionada en el input.
+   * @return {Promise<string>} La fecha seleccionada en formato DD/MM/AAAA.
+   */
+  public async getSelectedDate(): Promise<string> {
+    return await CalendarHelper.getSelectedDate(this.datepickerInput);
+  }
+
+  /**
+   * Obtiene el mes y año actualmente mostrados en el calendario.
+   * @return {Promise<string>} El mes y año en formato "Mes AAAA".
+   */
+  public async getCurrentCalendarMonthYear(): Promise<string> {
+    return await CalendarHelper.getCurrentCalendarMonthYear(this.calendarCurrentDate);
+  }
+
+  /**
+   * Verifica que un mes específico esté habilitado en el selector de meses.
+   * @param month Índice del mes a verificar (0-11, donde 0=enero, 11=diciembre).
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica que el mes está habilitado.
+   */
+  public async expectMonthEnabled(month: number): Promise<void> {
+    await CalendarHelper.expectMonthEnabled(this.page, month);
+  }
+
+  /**
+   * Verifica que un mes específico esté deshabilitado en el selector de meses.
+   * @param month Índice del mes a verificar (0-11, donde 0=enero, 11=diciembre).
+   * @return {Promise<void>} Promesa que se resuelve cuando se verifica que el mes está deshabilitado.
+   */
+  public async expectMonthDisabled(month: number): Promise<void> {
+    await CalendarHelper.expectMonthDisabled(this.page, month);
   }
 }
