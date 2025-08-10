@@ -1,7 +1,7 @@
 # 📋 Documentación de Tests - automation_pacas_expert
 
 **Versión:** 1.0.0  
-**Generado:** 10 de agosto de 2025, 11:22
+**Generado:** 10 de agosto de 2025, 11:42
 
 ---
 
@@ -265,7 +265,7 @@ Feature: Funcionalidad de Registro
     Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
     When el usuario ejecuta registerPage.openDatePicker
     And el usuario ejecuta DateHelper.validateValidDateSelection con "registerPage"
-    Then el resultado debe ser el esperado
+    Then se debe poder seleccionar una fecha que haga al usuario mayor de edad
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -279,7 +279,7 @@ Feature: Funcionalidad de Registro
     Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
     When el usuario ejecuta registerPage.openDatePicker
     And el usuario ejecuta DateHelper.validateInvalidDateRestriction con "registerPage"
-    Then el resultado debe ser el esperado
+    Then no se debe permitir seleccionar fechas que resulten en menor de edad
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---

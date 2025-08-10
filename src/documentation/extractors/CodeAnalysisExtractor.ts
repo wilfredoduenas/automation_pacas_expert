@@ -353,9 +353,10 @@ export class CodeAnalysisExtractor {
       thenSteps.push(expectation.description);
     });
     
-    // Si no hay expectations, agregar una genérica
+    // Si no hay expectations, generar basándose en el contexto del test
     if (thenSteps.length === 0) {
-      thenSteps.push('el resultado debe ser el esperado');
+      const contextualExpectation = this.generateContextualExpectation(testCase.title, testCase.actions);
+      thenSteps.push(contextualExpectation);
     }
     
     // Crear el escenario con todos los parámetros requeridos
@@ -413,6 +414,110 @@ export class CodeAnalysisExtractor {
     if (filePath.includes('rules')) return 'rules';
     if (filePath.includes('e2e')) return 'e2e';
     return 'validation';
+  }
+  
+  /**
+   * Genera una expectativa contextual basada en el nombre del test y las acciones
+   */
+  private generateContextualExpectation(testTitle: string, actions: CodeAction[]): string {
+    const title = testTitle.toLowerCase();
+    
+    // Expectativas para tests de foco
+    if (title.includes('foco')) {
+      return 'el campo número de celular debe tener el foco';
+    }
+    
+    // Expectativas para tests de botones
+    if (title.includes('deshabilitado') && title.includes('botón')) {
+      if (title.includes('iniciar sesión')) {
+        return 'el botón de iniciar sesión debe estar deshabilitado';
+      }
+      return 'el botón correspondiente debe estar deshabilitado';
+    }
+    
+    if (title.includes('habilitado') && title.includes('botón')) {
+      if (title.includes('iniciar sesión')) {
+        return 'el botón de iniciar sesión debe estar habilitado';
+      }
+      if (title.includes('registrarse')) {
+        return 'el botón de registrarse debe estar habilitado';
+      }
+      if (title.includes('invitado')) {
+        return 'el botón de ingresar como invitado debe estar habilitado';
+      }
+      return 'el botón correspondiente debe estar habilitado';
+    }
+    
+    // Expectativas para tests de mensajes de error
+    if (title.includes('mensaje de error') || title.includes('muestre un mensaje')) {
+      if (title.includes('longitud')) {
+        return 'se debe mostrar un mensaje de error sobre la longitud mínima';
+      }
+      if (title.includes('formato')) {
+        return 'se debe mostrar un mensaje de error sobre el formato';
+      }
+      return 'se debe mostrar el mensaje de error correspondiente';
+    }
+    
+    // Expectativas para tests de ignorar caracteres
+    if (title.includes('ignoren') || title.includes('ignoradas')) {
+      if (title.includes('letras')) {
+        return 'las letras deben ser ignoradas y no aparecer en el campo';
+      }
+      if (title.includes('caracteres especiales')) {
+        return 'los caracteres especiales deben ser ignorados';
+      }
+      return 'los caracteres no válidos deben ser ignorados';
+    }
+    
+    // Expectativas para tests de calendario
+    if (title.includes('calendario')) {
+      if (title.includes('muestre') && title.includes('defecto')) {
+        return 'el calendario debe mostrar el año y mes correcto para usuarios de mayoría de edad';
+      }
+      if (title.includes('navegar') && title.includes('meses futuros')) {
+        return 'no se debe permitir navegar a meses que resultarían en menor de edad';
+      }
+      if (title.includes('navegar') && title.includes('flechas')) {
+        return 'se debe poder navegar entre meses usando las flechas de navegación';
+      }
+      if (title.includes('cerrar') && title.includes('sin seleccionar')) {
+        return 'el calendario debe cerrarse correctamente sin seleccionar fecha';
+      }
+    }
+    
+    // Expectativas para tests de selección de fecha
+    if (title.includes('seleccionar') && title.includes('fecha')) {
+      if (title.includes('válida') && title.includes('más de 18')) {
+        return 'se debe poder seleccionar una fecha que haga al usuario mayor de edad';
+      }
+      if (title.includes('no se puede') && title.includes('17 años')) {
+        return 'no se debe permitir seleccionar fechas que resulten en menor de edad';
+      }
+      return 'la selección de fecha debe funcionar correctamente';
+    }
+    
+    // Expectativas para tests de popup
+    if (title.includes('popup') || title.includes('ayuda')) {
+      return 'se debe mostrar el popup de ayuda con la información correcta';
+    }
+    
+    // Expectativas para tests de validación de elementos
+    if (title.includes('presencia') || title.includes('elementos')) {
+      return 'todos los elementos de la página deben estar presentes y visibles';
+    }
+    
+    // Análisis de acciones para contexto adicional
+    const hasValidation = actions.some(action => 
+      action.methodName.includes('validate') || action.methodName.includes('verify')
+    );
+    
+    if (hasValidation) {
+      return 'las validaciones deben ejecutarse correctamente';
+    }
+    
+    // Expectativa genérica pero más específica que antes
+    return 'el comportamiento del sistema debe ser el correcto';
   }
 }
 
