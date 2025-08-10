@@ -1,5 +1,6 @@
 import { Page } from "@playwright/test";
 import { HomePage } from "../pages/HomePage";
+import { LoginPage } from "../pages/LoginPage";
 import { BasePage } from "../pages/BasePage";
 
 /**
@@ -10,10 +11,12 @@ import { BasePage } from "../pages/BasePage";
 export class NavigationHelper {
   private page: Page;
   private homePage: HomePage;
+  private loginPage: LoginPage;
 
   constructor(page: Page) {
     this.page = page;
     this.homePage = new HomePage(page); // Instancia única reutilizable
+    this.loginPage = new LoginPage(page); // Instancia única reutilizable
   }
 
   /**
@@ -85,8 +88,7 @@ export class NavigationHelper {
    */
   async navigateToRegister(): Promise<void> {
     await this.navigateToLogin();
-    const registerButton = this.page.getByRole("button", { name: "Registrarse" });
-    await registerButton.click();
+    await this.loginPage.clickAlternativeAccessRegisterButton();
   }
 
   /**
@@ -94,8 +96,7 @@ export class NavigationHelper {
    */
   async navigateAsGuest(): Promise<void> {
     await this.navigateToLogin();
-    const guestButton = this.page.getByRole("button", { name: "Ingresar como invitado" });
-    await guestButton.click();
+    await this.loginPage.clickAlternativeAccessGuestButton();
   }
 
   /**
