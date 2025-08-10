@@ -1,7 +1,7 @@
 # 📋 Documentación de Tests - automation_pacas_expert
 
 **Versión:** 1.0.0  
-**Generado:** 10 de agosto de 2025, 11:52
+**Generado:** 10 de agosto de 2025, 12:49
 
 ---
 
@@ -155,7 +155,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que al ingresar letras en el campo de número de celular, se ignoren
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "abc" en el campo número de celular
-    And el usuario ejecuta loginPage.getCredentialsPhoneValue
+    And el usuario verifica el valor del campo número de celular
     Then las letras deben ser ignoradas y el campo debe permanecer vacío
     And se debe verificar el resultado esperado
     And se verifica el resultado esperado
@@ -172,7 +172,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que al ingresar un número de celular que contenga letras, las letras sean ignoradas
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "9876abc" en el campo número de celular
-    And el usuario ejecuta loginPage.getCredentialsPhoneValue
+    And el usuario verifica el valor del campo número de celular
     Then el valor debe ser: "9876"
     And se verifica el resultado esperado
 ```
@@ -187,7 +187,7 @@ Feature: Funcionalidad de Login
   Scenario: Verificar que al ingresar caracteres especiales en el campo de número de celular, se ignoren
     Given el usuario se encuentra en la página de login
     When el usuario ingresa "9876!@#$" en el campo número de celular
-    And el usuario ejecuta loginPage.getCredentialsPhoneValue
+    And el usuario verifica el valor del campo número de celular
     Then el valor debe ser: "9876"
     And se verifica el resultado esperado
     And el botón de iniciar sesión debe estar deshabilitado
@@ -234,8 +234,8 @@ Feature: Funcionalidad de Login
 Feature: Funcionalidad de Registro
 
   Scenario: Verificar que el calendario muestre por defecto el año y mes correcto para mayoría de edad
-    Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
-    When el usuario ejecuta registerPage.openDatePicker
+    Given el usuario se encuentra en la página de registro
+    When el usuario abre el calendario
     Then el calendario debe estar visible
     And se validan los días habilitados para mayor de edad
 ```
@@ -248,10 +248,10 @@ Feature: Funcionalidad de Registro
 Feature: Funcionalidad de Registro
 
   Scenario: Verificar que no se pueden navegar a meses futuros que harían que el usuario tenga menos de 18 años
-    Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
-    When el usuario ejecuta registerPage.openDatePicker
-    And el usuario hace clic en el elemento
-    And el usuario ejecuta DateHelper.validateMonthRestrictions con "registerPage"
+    Given el usuario se encuentra en la página de registro
+    When el usuario abre el calendario
+    And el usuario selecciona una fecha
+    And se verifica que no se puede navegar a meses restringidos
     Then el calendario debe estar visible
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -263,9 +263,9 @@ Feature: Funcionalidad de Registro
 Feature: Funcionalidad de Registro
 
   Scenario: Verificar que se puede seleccionar una fecha válida que hace que el usuario tenga más de 18 años
-    Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
-    When el usuario ejecuta registerPage.openDatePicker
-    And el usuario ejecuta DateHelper.validateValidDateSelection con "registerPage"
+    Given el usuario se encuentra en la página de registro
+    When el usuario abre el calendario
+    And el usuario selecciona la fecha "registerPage"
     Then se debe poder seleccionar una fecha que haga al usuario mayor de edad
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -277,9 +277,9 @@ Feature: Funcionalidad de Registro
 Feature: Funcionalidad de Registro
 
   Scenario: Verificar que no se puede seleccionar fecha que hace que el usuario tenga exactamente 17 años, 11 meses y 29 días
-    Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
-    When el usuario ejecuta registerPage.openDatePicker
-    And el usuario ejecuta DateHelper.validateInvalidDateRestriction con "registerPage"
+    Given el usuario se encuentra en la página de registro
+    When el usuario abre el calendario
+    And se verifica que no se puede seleccionar una fecha inválida
     Then no se debe permitir seleccionar fechas que resulten en menor de edad
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -291,8 +291,8 @@ Feature: Funcionalidad de Registro
 Feature: Funcionalidad de Registro
 
   Scenario: Verificar que se puede navegar entre meses usando las flechas del calendario
-    Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
-    When el usuario ejecuta registerPage.openDatePicker
+    Given el usuario se encuentra en la página de registro
+    When el usuario abre el calendario
     Then el calendario debe estar visible
     And el calendario debe estar visible
 ```
@@ -305,9 +305,9 @@ Feature: Funcionalidad de Registro
 Feature: Funcionalidad de Registro
 
   Scenario: Verificar que se puede cerrar el calendario sin seleccionar una fecha
-    Given el usuario ejecuta CommonTestSteps.setupRegisterRulesTest con "page"
-    When el usuario ejecuta registerPage.openDatePicker
-    And el usuario ejecuta registerPage.closeDatePicker
+    Given el usuario se encuentra en la página de registro
+    When el usuario abre el calendario
+    And el usuario cierra un elemento
     Then el calendario debe estar visible
     And el calendario debe estar oculto
 ```

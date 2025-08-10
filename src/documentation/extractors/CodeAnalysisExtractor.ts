@@ -222,44 +222,324 @@ export class CodeAnalysisExtractor {
    * Genera descripción para acciones
    */
   private generateActionDescription(methodName: string, parameters: string[]): string {
-    // Mapeos específicos para diferentes métodos
-    if (methodName.includes('fillCredentialsPhone')) {
-      if (parameters[0] === '' || parameters[0] === '""') {
-        return 'el usuario borra la entrada del campo número de celular';
-      }
-      return `el usuario ingresa "${parameters[0]}" en el campo número de celular`;
-    }
+    // Análisis del nombre del método para extraer la acción real
+    const lowerMethod = methodName.toLowerCase();
     
-    if (methodName.includes('setupRulesTest')) {
+    // ============ SETUP Y CONFIGURACIÓN ============
+    if (lowerMethod.includes('setuprulestest') || lowerMethod.includes('setupregisterrulestest')) {
+      if (lowerMethod.includes('register')) {
+        return 'el usuario se encuentra en la página de registro';
+      }
       return 'el usuario se encuentra en la página de login';
     }
     
-    if (methodName.includes('setupValidationTest')) {
+    if (lowerMethod.includes('setupvalidationtest') || lowerMethod.includes('setupregistervalidationtest')) {
+      if (lowerMethod.includes('register')) {
+        return 'el usuario se encuentra en la página de registro';
+      }
       return 'el usuario se encuentra en la página';
     }
     
-    if (methodName.includes('click')) {
-      return `el usuario hace clic en ${parameters[0] || 'el elemento'}`;
+    if (lowerMethod.includes('documentationconfig.createdefault')) {
+      return 'el usuario configura el generador de documentación';
     }
     
-    if (methodName.includes('fill')) {
-      return `el usuario completa el campo con "${parameters[0] || ''}"`;
+    if (lowerMethod.includes('extractor.canprocess')) {
+      return 'el usuario verifica que se pueden procesar archivos de test';
     }
     
-    if (methodName.includes('select')) {
-      return `el usuario selecciona "${parameters[0] || ''}"`;
+    if (lowerMethod.includes('formatter.getfileextension')) {
+      return 'el usuario verifica el formato de salida de documentación';
     }
     
-    if (methodName.includes('navigate')) {
-      return `el usuario navega a ${parameters[0] || 'la página'}`;
+    // ============ NAVEGACIÓN ============
+    if (lowerMethod.includes('goto') || lowerMethod.includes('navigate')) {
+      if (lowerMethod.includes('home')) {
+        return 'el usuario navega a la página de inicio';
+      }
+      if (lowerMethod.includes('login')) {
+        return 'el usuario navega a la página de login';
+      }
+      if (lowerMethod.includes('register')) {
+        return 'el usuario navega a la página de registro';
+      }
+      return 'el usuario navega a la página correspondiente';
     }
     
-    // Descripción genérica si no encuentra mapeo específico
+    // ============ INTERACCIONES CON CAMPOS ============
+    if (lowerMethod.includes('fillcredentialsphone')) {
+      const value = parameters[0]?.replace(/['"]/g, '') || '';
+      if (value === '' || value === '""') {
+        return 'el usuario borra la entrada del campo número de celular';
+      }
+      return `el usuario ingresa "${value}" en el campo número de celular`;
+    }
+    
+    if (lowerMethod.includes('fill')) {
+      const value = parameters[0]?.replace(/['"]/g, '') || '';
+      if (lowerMethod.includes('phone')) {
+        return `el usuario ingresa "${value}" en el campo número de celular`;
+      }
+      if (lowerMethod.includes('email')) {
+        return `el usuario ingresa "${value}" en el campo de email`;
+      }
+      if (lowerMethod.includes('password')) {
+        return `el usuario ingresa "${value}" en el campo de contraseña`;
+      }
+      if (lowerMethod.includes('name')) {
+        return `el usuario ingresa "${value}" en el campo de nombre`;
+      }
+      return `el usuario completa el campo con "${value}"`;
+    }
+    
+    // ============ OBTENER VALORES ============
+    if (lowerMethod.includes('getcredentialsphonevalue')) {
+      return 'el usuario verifica el valor del campo número de celular';
+    }
+    
+    if (lowerMethod.includes('getvalue') || lowerMethod.includes('get') && lowerMethod.includes('value')) {
+      if (lowerMethod.includes('phone')) {
+        return 'el usuario verifica el valor del campo número de celular';
+      }
+      return 'el usuario verifica el valor del campo';
+    }
+    
+    // ============ CLICS Y SELECCIONES ============
+    if (lowerMethod.includes('click')) {
+      if (lowerMethod.includes('button')) {
+        return 'el usuario hace clic en el botón';
+      }
+      if (lowerMethod.includes('calendar')) {
+        return 'el usuario hace clic en el calendario';
+      }
+      if (lowerMethod.includes('date')) {
+        return 'el usuario selecciona una fecha';
+      }
+      const element = parameters[0]?.replace(/['"]/g, '') || 'el elemento';
+      return `el usuario hace clic en ${element}`;
+    }
+    
+    if (lowerMethod.includes('select')) {
+      const value = parameters[0]?.replace(/['"]/g, '') || '';
+      if (lowerMethod.includes('date')) {
+        return `el usuario selecciona la fecha "${value}"`;
+      }
+      return `el usuario selecciona "${value}"`;
+    }
+    
+    // ============ VALIDACIONES DE ELEMENTOS ============
+    if (lowerMethod.includes('validateloginpageelements')) {
+      return 'el usuario verifica que todos los elementos de login están presentes';
+    }
+    
+    if (lowerMethod.includes('validateregisterpageelements')) {
+      return 'el usuario verifica que todos los elementos de registro están presentes';
+    }
+    
+    if (lowerMethod.includes('validate') && lowerMethod.includes('elements')) {
+      return 'el usuario verifica que todos los elementos están presentes';
+    }
+    
+    // ============ VERIFICACIONES DE PÁGINA ============
+    if (lowerMethod.includes('verifymenu')) {
+      return 'el usuario verifica los elementos del menú';
+    }
+    
+    if (lowerMethod.includes('verifycarousel')) {
+      return 'el usuario verifica los elementos del carrusel';
+    }
+    
+    if (lowerMethod.includes('verifyexpert')) {
+      return 'el usuario verifica la sección de expertos';
+    }
+    
+    if (lowerMethod.includes('verifybenefits')) {
+      return 'el usuario verifica la sección de beneficios';
+    }
+    
+    if (lowerMethod.includes('verifycourses')) {
+      return 'el usuario verifica la sección de cursos';
+    }
+    
+    if (lowerMethod.includes('verifynews')) {
+      return 'el usuario verifica la sección de noticias';
+    }
+    
+    if (lowerMethod.includes('verifyprefooter')) {
+      return 'el usuario verifica la sección antes del pie de página';
+    }
+    
+    if (lowerMethod.includes('verifyfooter')) {
+      return 'el usuario verifica el pie de página';
+    }
+    
+    if (lowerMethod.includes('verify')) {
+      return 'el usuario verifica los elementos correspondientes';
+    }
+    
+    // ============ MENSAJES DE CONSOLA ============
+    if (lowerMethod.includes('console.log')) {
+      const message = parameters[0]?.replace(/['"]/g, '') || '';
+      if (message.includes('✅')) {
+        return 'el sistema confirma que está listo para usar';
+      }
+      if (message.includes('💡')) {
+        return 'el sistema muestra información sobre cómo generar documentación';
+      }
+      return 'el sistema muestra un mensaje informativo';
+    }
+    
+    // ============ ACCIONES DE CALENDARIO ============
+    if (lowerMethod.includes('opendatepicker') || lowerMethod.includes('opendate')) {
+      return 'el usuario abre el calendario';
+    }
+    
+    if (lowerMethod.includes('calendar')) {
+      if (lowerMethod.includes('open') || lowerMethod.includes('show')) {
+        return 'el usuario abre el calendario';
+      }
+      if (lowerMethod.includes('close')) {
+        return 'el usuario cierra el calendario';
+      }
+      if (lowerMethod.includes('navigate')) {
+        return 'el usuario navega en el calendario';
+      }
+      return 'el usuario interactúa con el calendario';
+    }
+    
+    // ============ VALIDACIONES ESPECÍFICAS ============
+    if (lowerMethod.includes('datehelper.validateenableddays') || 
+        lowerMethod.includes('validateenableddays') || 
+        (lowerMethod.includes('validate') && lowerMethod.includes('enabled') && lowerMethod.includes('days'))) {
+      return 'se verifican los días habilitados para mayor de edad';
+    }
+    
+    if (lowerMethod.includes('datehelper.validatemonthrestrictions') || 
+        lowerMethod.includes('validatemonthrestrictions')) {
+      return 'se verifica que no se puede navegar a meses restringidos';
+    }
+    
+    if (lowerMethod.includes('datehelper.validatevaliddateselection') || 
+        lowerMethod.includes('validatevaliddateselection')) {
+      return 'se verifica que se puede seleccionar una fecha válida';
+    }
+    
+    if (lowerMethod.includes('datehelper.validateinvaliddaterestriction') || 
+        lowerMethod.includes('validateinvaliddaterestriction') ||
+        lowerMethod.includes('validateinvalidfecharestriction')) {
+      return 'se verifica que no se puede seleccionar una fecha inválida';
+    }
+    
+    // ============ ACCIONES GENÉRICAS ============
+    if (lowerMethod.includes('create')) {
+      return 'el usuario crea un elemento';
+    }
+    
+    if (lowerMethod.includes('open')) {
+      return 'el usuario abre un elemento';
+    }
+    
+    if (lowerMethod.includes('close')) {
+      return 'el usuario cierra un elemento';
+    }
+    
+    if (lowerMethod.includes('clear')) {
+      return 'el usuario limpia el campo';
+    }
+    
+    if (lowerMethod.includes('press')) {
+      const key = parameters[0]?.replace(/['"]/g, '') || '';
+      return `el usuario presiona la tecla ${key}`;
+    }
+    
+    if (lowerMethod.includes('wait')) {
+      return 'el usuario espera a que se complete la acción';
+    }
+    
+    // ============ FALLBACK INTELIGENTE ============
+    // Si no encontramos un mapeo específico, intentamos extraer el significado del nombre del método
+    
+    // Remover prefijos comunes como page objects y CommonTestSteps
+    let cleanMethod = methodName
+      .replace(/^(homePage|loginPage|registerPage|page)\./, '')
+      .replace(/^CommonTestSteps\./, '')
+      .replace(/^DateHelper\./, '');
+    
+    // Mapeos específicos para métodos comunes antes del procesamiento general
+    const specificMappings: { [key: string]: string } = {
+      'openDatePicker': 'abre el calendario',
+      'validateEnabledDays': 'se verifican los días habilitados para mayor de edad',
+      'validateMonthRestrictions': 'se verifica que no se puede navegar a meses restringidos',
+      'validateValidDateSelection': 'se verifica que se puede seleccionar una fecha válida',
+      'validateInvalidDateRestriction': 'se verifica que no se puede seleccionar una fecha inválida',
+      'expectCalendarVisible': 'verifica que el calendario está visible',
+      'expectCalendarHidden': 'verifica que el calendario está oculto',
+      'clickDate': 'selecciona una fecha',
+      'clickNextMonth': 'navega al mes siguiente',
+      'clickPrevMonth': 'navega al mes anterior',
+      'clickCurrentDateHeader': 'hace clic en el encabezado de fecha actual',
+      'clearDate': 'limpia la fecha seleccionada',
+      'selectDate': 'selecciona una fecha'
+    };
+    
+    if (specificMappings[cleanMethod]) {
+      return `el usuario ${specificMappings[cleanMethod]}`;
+    }
+    
+    // Convertir camelCase a palabras
+    const words = cleanMethod
+      .replace(/([A-Z])/g, ' $1')
+      .toLowerCase()
+      .trim()
+      .split(' ');
+    
+    // Mapear palabras técnicas a lenguaje natural
+    const wordMappings: { [key: string]: string } = {
+      'get': 'obtiene',
+      'set': 'establece',
+      'check': 'verifica',
+      'verify': 'verifica',
+      'validate': 'valida',
+      'ensure': 'asegura',
+      'test': 'prueba',
+      'assert': 'confirma',
+      'expect': 'verifica que',
+      'click': 'hace clic en',
+      'fill': 'completa',
+      'type': 'escribe en',
+      'select': 'selecciona',
+      'choose': 'elige',
+      'toggle': 'alterna',
+      'enable': 'habilita',
+      'disable': 'deshabilita',
+      'show': 'muestra',
+      'hide': 'oculta',
+      'open': 'abre',
+      'close': 'cierra',
+      'submit': 'envía',
+      'cancel': 'cancela',
+      'confirm': 'confirma',
+      'accept': 'acepta',
+      'reject': 'rechaza',
+      'date': 'fecha',
+      'picker': 'selector',
+      'calendar': 'calendario',
+      'enabled': 'habilitados',
+      'disabled': 'deshabilitados',
+      'days': 'días',
+      'months': 'meses',
+      'years': 'años'
+    };
+    
+    const translatedWords = words.map(word => wordMappings[word] || word);
+    
+    // Si tenemos parámetros, incluirlos de manera natural
     if (parameters.length > 0 && parameters[0] !== '') {
-      return `el usuario ejecuta ${methodName} con "${parameters[0]}"`;
-    } else {
-      return `el usuario ejecuta ${methodName}`;
+      const param = parameters[0].replace(/['"]/g, '');
+      return `el usuario ${translatedWords.join(' ')} con "${param}"`;
     }
+    
+    return `el usuario ${translatedWords.join(' ')}`;
   }
   
   /**

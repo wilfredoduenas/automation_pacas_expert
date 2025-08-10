@@ -1,7 +1,7 @@
 # 📋 Documentación de Tests - automation_pacas_expert
 
 **Versión:** 1.0.0  
-**Generado:** 10 de agosto de 2025, 11:52
+**Generado:** 10 de agosto de 2025, 12:49
 
 ---
 
@@ -44,15 +44,15 @@ Feature: Página de Inicio
 
   Scenario: Presencia de elementos en la página de inicio
     Given el usuario se encuentra en la aplicación
-    When el usuario ejecuta homePage.goto con "BasePage.HOME_URL"
-    And el usuario ejecuta homePage.verifyMenuElements
-    And el usuario ejecuta homePage.verifyCarouselElements
-    And el usuario ejecuta homePage.verifyExpertElements
-    And el usuario ejecuta homePage.verifyBenefitsElements
-    And el usuario ejecuta homePage.verifyCoursesElements
-    And el usuario ejecuta homePage.verifyNewsElements
-    And el usuario ejecuta homePage.verifyPreFooterElements
-    And el usuario ejecuta homePage.verifyFooterElements
+    When el usuario navega a la página de inicio
+    And el usuario verifica los elementos del menú
+    And el usuario verifica los elementos del carrusel
+    And el usuario verifica la sección de expertos
+    And el usuario verifica la sección de beneficios
+    And el usuario verifica la sección de cursos
+    And el usuario verifica la sección de noticias
+    And el usuario verifica la sección antes del pie de página
+    And el usuario verifica el pie de página
     Then todos los elementos de la página deben estar presentes y visibles
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -65,7 +65,7 @@ Feature: Funcionalidad de Login
 
   Scenario: Presencia de elementos en la página de login
     Given el usuario se encuentra en la página
-    When el usuario ejecuta CommonTestSteps.validateLoginPageElements con "loginPage"
+    When el usuario verifica que todos los elementos de login están presentes
     Then todos los elementos de la página deben estar presentes y visibles
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
@@ -77,8 +77,8 @@ Feature: Funcionalidad de Login
 Feature: Funcionalidad de Registro
 
   Scenario: Presencia de elementos en la página de registro
-    Given el usuario ejecuta CommonTestSteps.setupRegisterValidationTest con "page"
-    When el usuario ejecuta CommonTestSteps.validateRegisterPageElements con "registerPage"
+    Given el usuario se encuentra en la página de registro
+    When el usuario verifica que todos los elementos de registro están presentes
     Then todos los elementos de la página deben estar presentes y visibles
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
