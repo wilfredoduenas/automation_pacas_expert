@@ -1,7 +1,7 @@
 # 📋 Documentación de Tests - automation_pacas_expert
 
 **Versión:** 1.0.0  
-**Generado:** 10 de agosto de 2025, 10:48
+**Generado:** 10 de agosto de 2025, 11:22
 
 ---
 
@@ -40,12 +40,20 @@
 **Archivo:** `home-validation.spec.ts` | **Línea:** 20 | **Estado:** pasos generados automáticamente
 ```gherkin
 # Escenario generado automáticamente basado en el nombre del test
-Feature: Elementos de la página de inicio
+Feature: Página de Inicio
 
   Scenario: Presencia de elementos en la página de inicio
-    Given el usuario está en la aplicación
-    When navega a la página correspondiente
-    Then debe ver todos los elementos de la interfaz correctamente
+    Given el usuario se encuentra en la aplicación
+    When el usuario ejecuta homePage.goto con "BasePage.HOME_URL"
+    And el usuario ejecuta homePage.verifyMenuElements
+    And el usuario ejecuta homePage.verifyCarouselElements
+    And el usuario ejecuta homePage.verifyExpertElements
+    And el usuario ejecuta homePage.verifyBenefitsElements
+    And el usuario ejecuta homePage.verifyCoursesElements
+    And el usuario ejecuta homePage.verifyNewsElements
+    And el usuario ejecuta homePage.verifyPreFooterElements
+    And el usuario ejecuta homePage.verifyFooterElements
+    Then el resultado debe ser el esperado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -53,12 +61,12 @@ Feature: Elementos de la página de inicio
 **Archivo:** `login-validation.spec.ts` | **Línea:** 19 | **Estado:** pasos generados automáticamente
 ```gherkin
 # Escenario generado automáticamente basado en el nombre del test
-Feature: Elementos de la página de login
+Feature: Funcionalidad de Login
 
   Scenario: Presencia de elementos en la página de login
-    Given el usuario está en la aplicación
-    When navega a la página correspondiente
-    Then debe ver todos los elementos de la interfaz correctamente
+    Given el usuario se encuentra en la página
+    When el usuario ejecuta CommonTestSteps.validateLoginPageElements con "loginPage"
+    Then el resultado debe ser el esperado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---
@@ -66,12 +74,12 @@ Feature: Elementos de la página de login
 **Archivo:** `register-validation.spec.ts` | **Línea:** 20 | **Estado:** pasos generados automáticamente
 ```gherkin
 # Escenario generado automáticamente basado en el nombre del test
-Feature: Elementos de la página de registro
+Feature: Funcionalidad de Registro
 
   Scenario: Presencia de elementos en la página de registro
-    Given el usuario está en la aplicación
-    When navega a la página correspondiente
-    Then debe ver todos los elementos de la interfaz correctamente
+    Given el usuario ejecuta CommonTestSteps.setupRegisterValidationTest con "page"
+    When el usuario ejecuta CommonTestSteps.validateRegisterPageElements con "registerPage"
+    Then el resultado debe ser el esperado
 ```
 > 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
 ---

@@ -20,14 +20,9 @@ test.describe.parallel("Elementos de la página de registro", () => {
   test("Presencia de elementos en la página de registro", async ({
     page,
   }, testInfo) => {
-    /**
-     * Configurar test de validación de registro
-     */
-    const { registerPage } = await CommonTestSteps.setupRegisterValidationTest(page);
-
-    /**
-     * Validar elementos de la página de registro
-     */
+    const { registerPage } = await CommonTestSteps.setupRegisterValidationTest(
+      page
+    );
     await CommonTestSteps.validateRegisterPageElements(registerPage);
   });
 });

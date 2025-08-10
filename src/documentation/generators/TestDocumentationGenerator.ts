@@ -7,7 +7,7 @@ import {
   TestSuiteStats,
   ITestScenario
 } from '../interfaces/IDocumentationGenerator';
-import { BDDScenarioExtractor } from './BDDScenarioExtractor';
+import { HybridScenarioExtractor } from '../extractors/HybridScenarioExtractor';
 import { MarkdownFormatter } from './MarkdownFormatter';
 import { FileScanner } from '../utils/FileScanner';
 import * as fs from 'fs';
@@ -30,7 +30,7 @@ export class TestDocumentationGenerator implements IDocumentationGenerator {
     config?: DocumentationConfig
   ) {
     // Dependency Injection con valores por defecto
-    this.extractor = extractor || new BDDScenarioExtractor();
+    this.extractor = extractor || new HybridScenarioExtractor();
     this.formatter = formatter || new MarkdownFormatter();
     this.config = config || DocumentationConfig.createDefault();
     this.fileScanner = new FileScanner();

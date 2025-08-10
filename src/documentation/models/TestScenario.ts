@@ -62,16 +62,22 @@ export class TestScenario implements ITestScenario {
       lines.push(`  Scenario: ${this.scenario}`);
     }
     
-    this.given.forEach(step => {
-      lines.push(`    Given ${step}`);
+    // Given: Solo el primero es Given, los demás son And
+    this.given.forEach((step, index) => {
+      const keyword = index === 0 ? 'Given' : 'And';
+      lines.push(`    ${keyword} ${step}`);
     });
     
-    this.when.forEach(step => {
-      lines.push(`    When ${step}`);
+    // When: Solo el primero es When, los demás son And
+    this.when.forEach((step, index) => {
+      const keyword = index === 0 ? 'When' : 'And';
+      lines.push(`    ${keyword} ${step}`);
     });
     
-    this.then.forEach(step => {
-      lines.push(`    Then ${step}`);
+    // Then: Solo el primero es Then, los demás son And
+    this.then.forEach((step, index) => {
+      const keyword = index === 0 ? 'Then' : 'And';
+      lines.push(`    ${keyword} ${step}`);
     });
     
     return lines.join('\n');

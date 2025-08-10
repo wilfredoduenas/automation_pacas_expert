@@ -19,14 +19,7 @@ test.describe.parallel("Elementos de la página de login", () => {
   test("Presencia de elementos en la página de login", async ({
     page,
   }, testInfo) => {
-    /**
-     * Configurar test de validación
-     */
     const { loginPage } = await CommonTestSteps.setupValidationTest(page);
-
-    /**
-     * Validar elementos de la página de login
-     */
     await CommonTestSteps.validateLoginPageElements(loginPage);
   });
 });
