@@ -2,13 +2,25 @@
   "name": "automation_pacas_expert",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:validation": "npx playwright test tests/validation/",
+    "test:rules": "npx playwright test tests/rules/",
+    "test:e2e": "npx playwright test tests/e2e/",
+    "generate-docs": "npx ts-node scripts/generate-docs.ts",
+    "generate-docs:validation": "npx ts-node scripts/generate-docs.ts tests/validation docs/validation-scenarios",
+    "generate-docs:rules": "npx ts-node scripts/generate-docs.ts tests/rules docs/rules-scenarios",
+    "generate-docs:e2e": "npx ts-node scripts/generate-docs.ts tests/e2e docs/e2e-scenarios"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.54.2",
-    "@types/node": "^24.2.0"
+    "@types/node": "^24.2.0",
+    "ts-node": "^10.9.2"
   }
 }
