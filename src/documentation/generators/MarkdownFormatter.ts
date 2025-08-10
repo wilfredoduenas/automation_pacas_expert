@@ -102,7 +102,9 @@ export class MarkdownFormatter implements IFormatter {
     const types = this.groupScenariosByType(scenarios);
     const totalScenarios = scenarios.length;
     const completeScenarios = scenarios.filter(s => s.isComplete()).length;
+    const explicitBDDScenarios = scenarios.filter(s => s.hasExplicitBDD()).length;
     const completionRate = totalScenarios > 0 ? Math.round((completeScenarios / totalScenarios) * 100) : 0;
+    const bddRate = totalScenarios > 0 ? Math.round((explicitBDDScenarios / totalScenarios) * 100) : 0;
     
     const summary = [`## 📊 Resumen Ejecutivo`];
     
@@ -111,12 +113,22 @@ export class MarkdownFormatter implements IFormatter {
     summary.push(`| **Total de Tests** | ${totalScenarios} |`);
     summary.push(`| **Escenarios Completos** | ${completeScenarios} |`);
     summary.push(`| **Tasa de Completitud** | ${completionRate}% |`);
+    summary.push(`| **Tests con BDD Explícito** | ${explicitBDDScenarios} |`);
+    summary.push(`| **Tasa de BDD Explícito** | ${bddRate}% |`);
     
     // Breakdown por tipo
     Object.entries(types).forEach(([type, typeScenarios]) => {
       const typeTitle = this.getTypeTitle(type as any);
-      summary.push(`| **${typeTitle}** | ${typeScenarios.length} tests |`);
+      const explicitInType = typeScenarios.filter(s => s.hasExplicitBDD()).length;
+      summary.push(`| **${typeTitle}** | ${typeScenarios.length} tests (${explicitInType} con BDD) |`);
     });
+    
+    // Leyenda
+    summary.push('');
+    summary.push('**Leyenda:**');
+    summary.push('- ✅ Test mapeado completamente');
+    summary.push('- ⚠️ Test incompleto o sin pasos BDD');
+    summary.push('- 🔄 Pasos BDD generados automáticamente');
     
     return summary.join('\n');
   }
@@ -140,8 +152,9 @@ export class MarkdownFormatter implements IFormatter {
       // Lista de tests
       typeScenarios.forEach(scenario => {
         const status = scenario.isComplete() ? '✅' : '⚠️';
+        const bddStatus = scenario.hasExplicitBDD() ? '' : ' 🔄';
         const fileName = this.getFileName(scenario.filePath);
-        sections.push(`- ${status} **${scenario.testName}** (_${fileName}_)`);
+        sections.push(`- ${status}${bddStatus} **${scenario.testName}** (_${fileName}_)`);
       });
     });
     
@@ -165,19 +178,37 @@ export class MarkdownFormatter implements IFormatter {
       sections.push(`### ${icon} ${typeTitle}`);
       
       typeScenarios.forEach((scenario, index) => {
-        sections.push(`#### ${index + 1}. ${scenario.testName}`);
+        // Determinar el estado del escenario
+        let statusIcon = '⚠️';
+        let bddStatus = 'sin pasos BDD definidos';
         
-        // Información del archivo
+        if (scenario.hasExplicitBDD()) {
+          statusIcon = '✅';
+          bddStatus = 'BDD explícito';
+        } else if (scenario.hasGeneratedSteps()) {
+          statusIcon = '🔄';
+          bddStatus = 'pasos generados automáticamente';
+        }
+        
+        sections.push(`#### ${index + 1}. ${statusIcon} ${scenario.testName}`);
+        
+        // Información del archivo y estado
         const fileName = this.getFileName(scenario.filePath);
-        sections.push(`**Archivo:** \`${fileName}\` | **Línea:** ${scenario.lineNumber}`);
+        sections.push(`**Archivo:** \`${fileName}\` | **Línea:** ${scenario.lineNumber} | **Estado:** ${bddStatus}`);
         
         // Escenario en formato Gherkin
-        if (scenario.isComplete()) {
+        if (scenario.hasExplicitBDD()) {
           sections.push('```gherkin');
           sections.push(scenario.toGherkinFormat());
           sections.push('```');
+        } else if (scenario.hasGeneratedSteps()) {
+          sections.push('```gherkin');
+          sections.push('# Escenario generado automáticamente basado en el nombre del test');
+          sections.push(scenario.toGherkinFormat());
+          sections.push('```');
+          sections.push('> 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación');
         } else {
-          sections.push('> ⚠️ **Escenario incompleto** - Faltan pasos BDD');
+          sections.push('> ⚠️ **Escenario sin pasos BDD** - Test mapeado pero sin pasos definidos');
         }
         
         sections.push('---');

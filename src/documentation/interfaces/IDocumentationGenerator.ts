@@ -110,6 +110,8 @@ export interface ITestScenario {
   toGherkinFormat(): string;
   getSummary(): ScenarioSummary;
   isComplete(): boolean;
+  hasExplicitBDD(): boolean;
+  hasGeneratedSteps(): boolean;
 }
 
 /**

@@ -96,10 +96,28 @@ export class TestScenario implements ITestScenario {
    * @returns true si el escenario está completo
    */
   public isComplete(): boolean {
+    // Un escenario está completo si tiene al menos un paso en cada categoría
+    // Y tiene un nombre de escenario válido
     return this.given.length > 0 && 
            this.when.length > 0 && 
            this.then.length > 0 &&
            this.scenario.trim() !== '';
+  }
+
+  /**
+   * Verifica si el escenario tiene comentarios BDD explícitos.
+   * @returns true si tiene comentarios BDD explícitos
+   */
+  public hasExplicitBDD(): boolean {
+    return this.metadata.hasExplicitBDD === true;
+  }
+
+  /**
+   * Verifica si los pasos fueron generados automáticamente.
+   * @returns true si los pasos fueron generados
+   */
+  public hasGeneratedSteps(): boolean {
+    return this.metadata.generatedSteps === true;
   }
 }
 

@@ -64,7 +64,9 @@ export class BDDScenarioExtractor implements IScenarioExtractor {
       scenarios.push(this.createTestScenario(currentTest, currentSteps, filePath, testType));
     }
     
-    return scenarios.filter(scenario => scenario.isComplete());
+    // Devolver TODOS los scenarios, no solo los completos
+    // Los incompletos se marcarán como tal en la documentación
+    return scenarios;
   }
 
   /**
@@ -199,19 +201,107 @@ export class BDDScenarioExtractor implements IScenarioExtractor {
     filePath: string,
     testType: 'validation' | 'rules' | 'e2e'
   ): ITestScenario {
+    const testName = testData.testName || 'Test sin nombre';
+    
+    // Si no hay pasos BDD, crear pasos básicos basados en el nombre del test
+    const finalSteps = this.ensureMinimumSteps(steps, testName, testType);
+    
     return new TestScenario(
-      testData.testName || 'Test sin nombre',
-      testData.description || 'Sin descripción',
+      testName,
+      testData.description || testName,
       this.extractFeature(fs.readFileSync(filePath, 'utf-8'), filePath),
-      testData.testName || 'Escenario sin nombre',
-      steps.given,
-      steps.when,
-      steps.then,
+      testName,
+      finalSteps.given,
+      finalSteps.when,
+      finalSteps.then,
       filePath,
       testData.lineNumber || 0,
       testType,
       [],
-      {}
+      { 
+        hasExplicitBDD: steps.given.length > 0 || steps.when.length > 0 || steps.then.length > 0,
+        generatedSteps: finalSteps.generated || false
+      }
     );
+  }
+
+  /**
+   * Asegura que el test tenga pasos mínimos para ser considerado válido.
+   * @param steps Pasos existentes
+   * @param testName Nombre del test
+   * @param testType Tipo de test
+   * @returns Pasos con mínimos garantizados
+   */
+  private ensureMinimumSteps(
+    steps: { given: string[], when: string[], then: string[] },
+    testName: string,
+    testType: 'validation' | 'rules' | 'e2e'
+  ): { given: string[], when: string[], then: string[], generated?: boolean } {
+    // Si ya tiene pasos BDD explícitos, devolverlos tal como están
+    if (steps.given.length > 0 || steps.when.length > 0 || steps.then.length > 0) {
+      return steps;
+    }
+    
+    // Generar pasos básicos basados en el tipo de test y nombre
+    const generatedSteps = this.generateBasicSteps(testName, testType);
+    
+    return {
+      given: generatedSteps.given,
+      when: generatedSteps.when,
+      then: generatedSteps.then,
+      generated: true
+    };
+  }
+
+  /**
+   * Genera pasos BDD básicos cuando no hay comentarios explícitos.
+   * @param testName Nombre del test
+   * @param testType Tipo de test
+   * @returns Pasos BDD básicos generados
+   */
+  private generateBasicSteps(
+    testName: string, 
+    testType: 'validation' | 'rules' | 'e2e'
+  ): { given: string[], when: string[], then: string[] } {
+    const lowerName = testName.toLowerCase();
+    
+    if (testType === 'validation') {
+      return {
+        given: ['el usuario está en la aplicación'],
+        when: ['navega a la página correspondiente'],
+        then: ['debe ver todos los elementos de la interfaz correctamente']
+      };
+    }
+    
+    if (testType === 'rules') {
+      if (lowerName.includes('login') || lowerName.includes('sesión')) {
+        return {
+          given: ['el usuario está en la página de login'],
+          when: ['interactúa con los elementos de login'],
+          then: ['debe cumplirse la regla de negocio especificada']
+        };
+      }
+      
+      if (lowerName.includes('register') || lowerName.includes('registro')) {
+        return {
+          given: ['el usuario está en la página de registro'],
+          when: ['interactúa con los elementos de registro'],
+          then: ['debe cumplirse la regla de negocio especificada']
+        };
+      }
+      
+      return {
+        given: ['el usuario está en la aplicación'],
+        when: ['ejecuta la acción correspondiente'],
+        then: ['debe cumplirse la regla de negocio especificada']
+      };
+    }
+    
+    // e2e
+    return {
+      given: ['el usuario inicia el flujo end-to-end'],
+      when: ['ejecuta las acciones del flujo completo'],
+      then: ['debe completar el flujo exitosamente']
+    };
   }
 }

@@ -1,29 +1,49 @@
 # 📋 Documentación de Tests - automation_pacas_expert
 
 **Versión:** 1.0.0  
-**Generado:** 10 de agosto de 2025, 10:31
+**Generado:** 10 de agosto de 2025, 10:48
 
 ---
 
 ## 📑 Tabla de Contenidos
 - [Resumen Ejecutivo](#resumen-ejecutivo)
 - [Escenarios por Tipo](#escenarios-por-tipo)
+  - [Tests de Validación](#tests-de-validacin)
   - [Tests de Reglas de Negocio](#tests-de-reglas-de-negocio)
 - [Escenarios Detallados](#escenarios-detallados)
 
 ## 📊 Resumen Ejecutivo
 | Métrica | Valor |
 |---------|--------|
-| **Total de Tests** | 14 |
-| **Escenarios Completos** | 14 |
-| **Tasa de Completitud** | 100% |
-| **Tests de Reglas de Negocio** | 14 tests |
+| **Total de Tests** | 22 |
+| **Escenarios Completos** | 18 |
+| **Tasa de Completitud** | 82% |
+| **Tests con BDD Explícito** | 18 |
+| **Tasa de BDD Explícito** | 82% |
+| **Tests de Validación** | 4 tests (0 con BDD) |
+| **Tests de Reglas de Negocio** | 18 tests (18 con BDD) |
+
+**Leyenda:**
+- ✅ Test mapeado completamente
+- ⚠️ Test incompleto o sin pasos BDD
+- 🔄 Pasos BDD generados automáticamente
 
 ## 🗂️ Escenarios por Tipo
-### ⚖️ Tests de Reglas de Negocio
-**Total de tests:** 14
+### 🔍 Tests de Validación
+**Total de tests:** 4
 
+- ✅ 🔄 **Demostrar generación de documentación** (_documentation-demo.spec.ts_)
+- ✅ 🔄 **Presencia de elementos en la página de inicio** (_home-validation.spec.ts_)
+- ✅ 🔄 **Presencia de elementos en la página de login** (_login-validation.spec.ts_)
+- ✅ 🔄 **Presencia de elementos en la página de registro** (_register-validation.spec.ts_)
+### ⚖️ Tests de Reglas de Negocio
+**Total de tests:** 18
+
+- ⚠️ **Verificar que el campo número de celular tenga el foco al abrir la página** (_login-rules.spec.ts_)
+- ⚠️ **Verificar que el botón de iniciar sesión esté deshabilitado al abrir la página** (_login-rules.spec.ts_)
 - ✅ **Verificar que el botón de iniciar sesión esté habilitado al ingresar un número de celular válido** (_login-rules.spec.ts_)
+- ⚠️ **Verificar que el botón de registrarse en la sección de acceso alternativo esté habilitado** (_login-rules.spec.ts_)
+- ⚠️ **Verificar que el botón de ingresar como invitado esté habilitado** (_login-rules.spec.ts_)
 - ✅ **Verificar que al ingresar un número de celular que inicie con un dígito distinto de 9, el botón de iniciar sesión esté deshabilitado y se muestre un mensaje de error** (_login-rules.spec.ts_)
 - ✅ **Verificar que al ingresar un número de celular que no cumple con la longitud mínima, se muestre un mensaje de error** (_login-rules.spec.ts_)
 - ✅ **Verificar que al ingresar letras en el campo de número de celular, se ignoren** (_login-rules.spec.ts_)
@@ -39,9 +59,82 @@
 - ✅ **Verificar que se puede cerrar el calendario sin seleccionar una fecha** (_register-rules.spec.ts_)
 
 ## 📝 Escenarios Detallados
+### 🔍 Tests de Validación
+#### 1. 🔄 Demostrar generación de documentación
+**Archivo:** `documentation-demo.spec.ts` | **Línea:** 12 | **Estado:** pasos generados automáticamente
+```gherkin
+# Escenario generado automáticamente basado en el nombre del test
+Feature: Documentation Generator Demo
+
+  Scenario: Demostrar generación de documentación
+    Given el usuario está en la aplicación
+    When navega a la página correspondiente
+    Then debe ver todos los elementos de la interfaz correctamente
+```
+> 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
+---
+#### 2. 🔄 Presencia de elementos en la página de inicio
+**Archivo:** `home-validation.spec.ts` | **Línea:** 20 | **Estado:** pasos generados automáticamente
+```gherkin
+# Escenario generado automáticamente basado en el nombre del test
+Feature: Elementos de la página de inicio
+
+  Scenario: Presencia de elementos en la página de inicio
+    Given el usuario está en la aplicación
+    When navega a la página correspondiente
+    Then debe ver todos los elementos de la interfaz correctamente
+```
+> 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
+---
+#### 3. 🔄 Presencia de elementos en la página de login
+**Archivo:** `login-validation.spec.ts` | **Línea:** 19 | **Estado:** pasos generados automáticamente
+```gherkin
+# Escenario generado automáticamente basado en el nombre del test
+Feature: Elementos de la página de login
+
+  Scenario: Presencia de elementos en la página de login
+    Given el usuario está en la aplicación
+    When navega a la página correspondiente
+    Then debe ver todos los elementos de la interfaz correctamente
+```
+> 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
+---
+#### 4. 🔄 Presencia de elementos en la página de registro
+**Archivo:** `register-validation.spec.ts` | **Línea:** 20 | **Estado:** pasos generados automáticamente
+```gherkin
+# Escenario generado automáticamente basado en el nombre del test
+Feature: Elementos de la página de registro
+
+  Scenario: Presencia de elementos en la página de registro
+    Given el usuario está en la aplicación
+    When navega a la página correspondiente
+    Then debe ver todos los elementos de la interfaz correctamente
+```
+> 🔄 **Pasos generados automáticamente** - Considere agregar comentarios BDD explícitos para mejorar la documentación
+---
 ### ⚖️ Tests de Reglas de Negocio
-#### 1. Verificar que el botón de iniciar sesión esté habilitado al ingresar un número de celular válido
-**Archivo:** `login-rules.spec.ts` | **Línea:** 56
+#### 1. ✅ Verificar que el campo número de celular tenga el foco al abrir la página
+**Archivo:** `login-rules.spec.ts` | **Línea:** 23 | **Estado:** BDD explícito
+```gherkin
+Feature: Reglas de negocio de la página de login
+
+  Scenario: Verificar que el campo número de celular tenga el foco al abrir la página
+    Given el usuario se encuentra en la página de login
+    Then el campo número de celular debe tener el foco
+```
+---
+#### 2. ✅ Verificar que el botón de iniciar sesión esté deshabilitado al abrir la página
+**Archivo:** `login-rules.spec.ts` | **Línea:** 40 | **Estado:** BDD explícito
+```gherkin
+Feature: Reglas de negocio de la página de login
+
+  Scenario: Verificar que el botón de iniciar sesión esté deshabilitado al abrir la página
+    Given el usuario se encuentra en la página de login
+    Then el botón de iniciar sesión debe estar deshabilitado
+```
+---
+#### 3. ✅ Verificar que el botón de iniciar sesión esté habilitado al ingresar un número de celular válido
+**Archivo:** `login-rules.spec.ts` | **Línea:** 56 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -51,8 +144,28 @@ Feature: Reglas de negocio de la página de login
     Then el botón de iniciar sesión debe estar habilitado
 ```
 ---
-#### 2. Verificar que al ingresar un número de celular que inicie con un dígito distinto de 9, el botón de iniciar sesión esté deshabilitado y se muestre un mensaje de error
-**Archivo:** `login-rules.spec.ts` | **Línea:** 111
+#### 4. ✅ Verificar que el botón de registrarse en la sección de acceso alternativo esté habilitado
+**Archivo:** `login-rules.spec.ts` | **Línea:** 77 | **Estado:** BDD explícito
+```gherkin
+Feature: Reglas de negocio de la página de login
+
+  Scenario: Verificar que el botón de registrarse en la sección de acceso alternativo esté habilitado
+    Given el usuario se encuentra en la página de login
+    Then el botón de registrarse en la sección de acceso alternativo debe estar habilitado
+```
+---
+#### 5. ✅ Verificar que el botón de ingresar como invitado esté habilitado
+**Archivo:** `login-rules.spec.ts` | **Línea:** 94 | **Estado:** BDD explícito
+```gherkin
+Feature: Reglas de negocio de la página de login
+
+  Scenario: Verificar que el botón de ingresar como invitado esté habilitado
+    Given el usuario se encuentra en la página de login
+    Then el botón de ingresar como invitado debe estar habilitado
+```
+---
+#### 6. ✅ Verificar que al ingresar un número de celular que inicie con un dígito distinto de 9, el botón de iniciar sesión esté deshabilitado y se muestre un mensaje de error
+**Archivo:** `login-rules.spec.ts` | **Línea:** 111 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -62,8 +175,8 @@ Feature: Reglas de negocio de la página de login
     Then el mensaje de error general del teléfono debe estar visible.
 ```
 ---
-#### 3. Verificar que al ingresar un número de celular que no cumple con la longitud mínima, se muestre un mensaje de error
-**Archivo:** `login-rules.spec.ts` | **Línea:** 142
+#### 7. ✅ Verificar que al ingresar un número de celular que no cumple con la longitud mínima, se muestre un mensaje de error
+**Archivo:** `login-rules.spec.ts` | **Línea:** 142 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -73,8 +186,8 @@ Feature: Reglas de negocio de la página de login
     Then el mensaje de error general del teléfono debe estar visible.
 ```
 ---
-#### 4. Verificar que al ingresar letras en el campo de número de celular, se ignoren
-**Archivo:** `login-rules.spec.ts` | **Línea:** 173
+#### 8. ✅ Verificar que al ingresar letras en el campo de número de celular, se ignoren
+**Archivo:** `login-rules.spec.ts` | **Línea:** 173 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -84,8 +197,8 @@ Feature: Reglas de negocio de la página de login
     Then el valor del campo de número de celular debe ser vacío
 ```
 ---
-#### 5. Verificar que al ingresar un número de celular que contenga letras, las letras sean ignoradas
-**Archivo:** `login-rules.spec.ts` | **Línea:** 200
+#### 9. ✅ Verificar que al ingresar un número de celular que contenga letras, las letras sean ignoradas
+**Archivo:** `login-rules.spec.ts` | **Línea:** 200 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -95,8 +208,8 @@ Feature: Reglas de negocio de la página de login
     Then el valor del campo de número de celular debe ser solo numérico
 ```
 ---
-#### 6. Verificar que al ingresar caracteres especiales en el campo de número de celular, se ignoren
-**Archivo:** `login-rules.spec.ts` | **Línea:** 224
+#### 10. ✅ Verificar que al ingresar caracteres especiales en el campo de número de celular, se ignoren
+**Archivo:** `login-rules.spec.ts` | **Línea:** 224 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -106,8 +219,8 @@ Feature: Reglas de negocio de la página de login
     Then el valor del campo de número de celular debe ser solo numérico
 ```
 ---
-#### 7. Verificar que al ingresar un número de celular que no cumple con el formato y borrar la entrada, se muestre un mensaje de error
-**Archivo:** `login-rules.spec.ts` | **Línea:** 248
+#### 11. ✅ Verificar que al ingresar un número de celular que no cumple con el formato y borrar la entrada, se muestre un mensaje de error
+**Archivo:** `login-rules.spec.ts` | **Línea:** 248 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -117,8 +230,8 @@ Feature: Reglas de negocio de la página de login
     Then el mensaje de error de formato debe estar visible.
 ```
 ---
-#### 8. Verificar que al hacer clic en el link cambiaste el número de celular, se muestre el popup: Te ayudaremos
-**Archivo:** `login-rules.spec.ts` | **Línea:** 294
+#### 12. ✅ Verificar que al hacer clic en el link cambiaste el número de celular, se muestre el popup: Te ayudaremos
+**Archivo:** `login-rules.spec.ts` | **Línea:** 294 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de login
 
@@ -128,8 +241,8 @@ Feature: Reglas de negocio de la página de login
     Then se debe mostrar el popup: Te ayudaremos a resolverlo
 ```
 ---
-#### 9. Verificar que el calendario muestre por defecto el año y mes correcto para mayoría de edad
-**Archivo:** `register-rules.spec.ts` | **Línea:** 24
+#### 13. ✅ Verificar que el calendario muestre por defecto el año y mes correcto para mayoría de edad
+**Archivo:** `register-rules.spec.ts` | **Línea:** 24 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de registro
 
@@ -139,8 +252,8 @@ Feature: Reglas de negocio de la página de registro
     Then el calendario debe estar visible
 ```
 ---
-#### 10. Verificar que no se pueden navegar a meses futuros que harían que el usuario tenga menos de 18 años
-**Archivo:** `register-rules.spec.ts` | **Línea:** 52
+#### 14. ✅ Verificar que no se pueden navegar a meses futuros que harían que el usuario tenga menos de 18 años
+**Archivo:** `register-rules.spec.ts` | **Línea:** 52 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de registro
 
@@ -150,8 +263,8 @@ Feature: Reglas de negocio de la página de registro
     Then el calendario debe estar visible
 ```
 ---
-#### 11. Verificar que se puede seleccionar una fecha válida que hace que el usuario tenga más de 18 años
-**Archivo:** `register-rules.spec.ts` | **Línea:** 81
+#### 15. ✅ Verificar que se puede seleccionar una fecha válida que hace que el usuario tenga más de 18 años
+**Archivo:** `register-rules.spec.ts` | **Línea:** 81 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de registro
 
@@ -161,8 +274,8 @@ Feature: Reglas de negocio de la página de registro
     Then la fecha debe ser seleccionada correctamente y el calendario debe cerrarse
 ```
 ---
-#### 12. Verificar que no se puede seleccionar fecha que hace que el usuario tenga exactamente 17 años, 11 meses y 29 días
-**Archivo:** `register-rules.spec.ts` | **Línea:** 104
+#### 16. ✅ Verificar que no se puede seleccionar fecha que hace que el usuario tenga exactamente 17 años, 11 meses y 29 días
+**Archivo:** `register-rules.spec.ts` | **Línea:** 104 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de registro
 
@@ -172,8 +285,8 @@ Feature: Reglas de negocio de la página de registro
     Then esa fecha específica debe estar deshabilitada
 ```
 ---
-#### 13. Verificar que se puede navegar entre meses usando las flechas del calendario
-**Archivo:** `register-rules.spec.ts` | **Línea:** 127
+#### 17. ✅ Verificar que se puede navegar entre meses usando las flechas del calendario
+**Archivo:** `register-rules.spec.ts` | **Línea:** 127 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de registro
 
@@ -185,8 +298,8 @@ Feature: Reglas de negocio de la página de registro
     Then el calendario debe regresar al mes original
 ```
 ---
-#### 14. Verificar que se puede cerrar el calendario sin seleccionar una fecha
-**Archivo:** `register-rules.spec.ts` | **Línea:** 164
+#### 18. ✅ Verificar que se puede cerrar el calendario sin seleccionar una fecha
+**Archivo:** `register-rules.spec.ts` | **Línea:** 164 | **Estado:** BDD explícito
 ```gherkin
 Feature: Reglas de negocio de la página de registro
 
