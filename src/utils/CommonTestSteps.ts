@@ -1,6 +1,7 @@
 import { Page, test } from "@playwright/test";
 import { HomePage } from "../pages/HomePage";
 import { LoginPage } from "../pages/LoginPage";
+import { RegisterPage } from "../pages/RegisterPage";
 import { NavigationHelper } from "./NavigationHelper";
 
 /**
@@ -171,6 +172,57 @@ export class CommonTestSteps {
       
       // Verificar contraste básico (placeholder para implementación futura)
       // await axeCheck(page);
+    });
+  }
+
+  // ========== MÉTODOS PARA PÁGINA DE REGISTRO ==========
+
+  /**
+   * Step común: Navegar a la página de registro.
+   */
+  static async navigateToRegister(page: Page): Promise<{ homePage: HomePage; loginPage: LoginPage; registerPage: RegisterPage }> {
+    return await test.step("Navegar a la página de registro", async () => {
+      const navigationHelper = new NavigationHelper(page);
+      
+      // Usar NavigationHelper para la navegación
+      await navigationHelper.navigateToRegister();
+      
+      // Retornar instancias para uso en tests
+      return { 
+        homePage: new HomePage(page), 
+        loginPage: new LoginPage(page),
+        registerPage: new RegisterPage(page)
+      };
+    });
+  }
+
+  /**
+   * Step común: Validar elementos de registro completos.
+   */
+  static async validateRegisterPageElements(registerPage: RegisterPage): Promise<void> {
+    await test.step("Validar elementos de la página de registro", async () => {
+      await registerPage.verifyProgressElements();
+      await registerPage.verifyPersonalDataElements();
+      await registerPage.verifyDocumentTypeElements();
+      await registerPage.verifyNavigationElements();
+    });
+  }
+
+  /**
+   * Step común: Preparar test de validación para registro.
+   */
+  static async setupRegisterValidationTest(page: Page): Promise<{ homePage: HomePage; loginPage: LoginPage; registerPage: RegisterPage }> {
+    return await test.step("Configurar test de validación de registro", async () => {
+      return await this.navigateToRegister(page);
+    });
+  }
+
+  /**
+   * Step común: Configurar test de reglas de negocio para registro.
+   */
+  static async setupRegisterRulesTest(page: Page): Promise<{ homePage: HomePage; loginPage: LoginPage; registerPage: RegisterPage }> {
+    return await test.step("Configurar test de reglas de negocio de registro", async () => {
+      return await this.navigateToRegister(page);
     });
   }
 }
