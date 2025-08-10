@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Runner - Playwright Automation</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- Inline Critical CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+        
+        .app-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 24px;
+            gap: 24px;
+            overflow: auto;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        
+        .content-area {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        
+        .test-type-card {
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .test-type-card:hover {
+            border-color: #667eea;
+            background-color: #f8fafc;
+        }
+        
+        .test-type-card.active {
+            border-color: #667eea;
+            background-color: #f1f5f9;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .material-icons {
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        /* Estados de tests */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            gap: 4px;
+        }
+
+        .status-idle {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .status-running {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-passed {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-failed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .test-item.selected {
+            background: #f0f9ff;
+            border-left: 3px solid #0ea5e9;
+        }
+
+        .test-item.test-passed {
+            border-left: 3px solid #16a34a;
+        }
+
+        .test-item.test-failed {
+            border-left: 3px solid #dc2626;
+        }
+
+        .test-item.test-running {
+            border-left: 3px solid #d97706;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #f1f5f9;
+            color: #0ea5e9;
+        }
+
+        .run-single-test {
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #16a34a;
+            transition: all 0.2s;
+        }
+
+        .run-single-test:hover {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        
+        /* Checkbox Styles */
+        .test-checkbox, .file-checkbox {
+            margin-right: 8px;
+            accent-color: #667eea;
+        }
+        
+        .test-item.selected {
+            background-color: #f0f4ff;
+            border-left: 3px solid #667eea;
+        }
+        
+        .test-group-header.selected {
+            background-color: #f0f4ff;
+        }
+        
+        #selectedCount {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Sidebar Group Styles - Simplified */
+        .test-group-summary {
+            margin-bottom: 12px;
+        }
+
+        .test-group-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .test-group-card:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .test-group-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .test-group-icon {
+            color: #6366f1;
+            font-size: 24px;
+        }
+
+        .test-group-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .test-group-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .test-group-count {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <span class="material-icons header-icon">speed</span>
+                    <h1 class="app-title">Test Runner</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" id="refreshBtn" title="Actualizar tests">
+                        <span class="material-icons">refresh</span>
+                    </button>
+                    <button class="btn-icon" id="settingsBtn" title="Configuración">
+                        <span class="material-icons">settings</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <span class="material-icons">folder</span>
+                        Tipos de Tests
+                    </h3>
+                    <div class="test-groups" id="testGroups">
+                        <!-- Test groups will be populated here -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <span class="material-icons">tune</span>
+                        Configuración
+                    </h3>
+                    <div class="config-panel">
+                        <div class="config-item">
+                            <label for="browserSelect">Navegador:</label>
+                            <select id="browserSelect" class="config-select">
+                                <option value="chromium">Chromium</option>
+                                <option value="firefox">Firefox</option>
+                                <option value="webkit">WebKit</option>
+                            </select>
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="headlessToggle">
+                                <input type="checkbox" id="headlessToggle" checked>
+                                Modo Headless
+                            </label>
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="workersRange">Workers: <span id="workersValue">4</span></label>
+                            <input type="range" id="workersRange" min="1" max="8" value="4" class="config-range">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <div class="control-left">
+                        <button class="btn btn-primary" id="runSelectedBtn">
+                            <span class="material-icons">play_arrow</span>
+                            Ejecutar Seleccionados
+                        </button>
+                        <button class="btn btn-secondary" id="runAllBtn">
+                            <span class="material-icons">play_circle</span>
+                            Ejecutar Todos
+                        </button>
+                        <button class="btn btn-danger" id="stopBtn" disabled>
+                            <span class="material-icons">stop</span>
+                            Detener
+                        </button>
+                    </div>
+                    
+                    <div class="control-right">
+                        <div class="search-box">
+                            <span class="material-icons search-icon">search</span>
+                            <input type="text" id="searchInput" placeholder="Buscar tests...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test List -->
+                <div class="test-list-container">
+                    <div class="test-list-header">
+                        <div class="header-item">
+                            <input type="checkbox" id="selectAllTests">
+                            <span>Test (<span id="selectedCount">0</span> seleccionados)</span>
+                        </div>
+                        <div class="header-item">Estado</div>
+                        <div class="header-item">Duración</div>
+                        <div class="header-item">Acciones</div>
+                    </div>
+                    
+                    <div class="test-list" id="testList">
+                        <!-- Test items will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                    <div class="progress-header">
+                        <span class="progress-title">Ejecutando tests...</span>
+                        <span class="progress-stats" id="progressStats">0/0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-details" id="progressDetails">
+                        Preparando ejecución...
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Results Panel -->
+        <div class="results-panel" id="resultsPanel" style="display: none;">
+            <div class="results-header">
+                <h3>
+                    <span class="material-icons">assessment</span>
+                    Resultados de Ejecución
+                </h3>
+                <button class="btn-icon" id="closeResultsBtn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="results-content" id="resultsContent">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer">
+        <!-- Notifications will be shown here -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/testRunner.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/websocket.js"></script>
+</body>
+</html>
